@@ -135,6 +135,23 @@ const MBTIAssessment = () => {
     },
   };
   
+  // Helper function to get button color based on answer
+  const getQuestionButtonStyles = (questionIndex: number) => {
+    const question = mbtiQuestions[questionIndex];
+    
+    if (currentQuestionIndex === questionIndex) {
+      return "pointer-events-none";
+    }
+    
+    if (answers[question.id] === 'A') {
+      return "border-blue-500 bg-blue-100 text-blue-700 hover:bg-blue-200";
+    } else if (answers[question.id] === 'B') {
+      return "border-green-500 bg-green-100 text-green-700 hover:bg-green-200";
+    }
+    
+    return ""; 
+  };
+  
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <div className="mb-4">
@@ -151,10 +168,10 @@ const MBTIAssessment = () => {
           {mbtiQuestions.map((q, index) => (
             <Button
               key={q.id}
-              variant={currentQuestionIndex === index ? "default" : answers[q.id] ? "outline" : "ghost"}
+              variant={currentQuestionIndex === index ? "default" : "outline"}
               size="sm"
               onClick={() => jumpToQuestion(index)}
-              className={`text-xs px-3 ${answers[q.id] ? "border-green-500" : ""} ${currentQuestionIndex === index ? "pointer-events-none" : ""}`}
+              className={`text-xs px-3 transition-colors ${getQuestionButtonStyles(index)}`}
             >
               {index + 1}
             </Button>
@@ -192,7 +209,7 @@ const MBTIAssessment = () => {
             className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-200 ${
               answers[currentQuestion.id] === 'A' 
                 ? 'bg-blue-500 text-white shadow-lg ring-2 ring-blue-300' 
-                : 'bg-secondary/70 hover:bg-secondary hover:shadow-md'
+                : 'bg-secondary/70 hover:bg-blue-100 hover:text-blue-700 hover:shadow-md'
             }`}
           >
             <div className="flex items-start gap-4">
@@ -220,7 +237,7 @@ const MBTIAssessment = () => {
             className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-200 ${
               answers[currentQuestion.id] === 'B' 
                 ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-300' 
-                : 'bg-secondary/70 hover:bg-secondary hover:shadow-md'
+                : 'bg-secondary/70 hover:bg-green-100 hover:text-green-700 hover:shadow-md'
             }`}
           >
             <div className="flex items-start gap-4">
