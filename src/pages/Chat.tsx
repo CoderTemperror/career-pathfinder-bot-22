@@ -1,69 +1,100 @@
-
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { pageVariants } from '@/utils/animations';
-import { Bot, PanelLeftOpen } from 'lucide-react';
-import Navbar from '@/components/Navbar';
 import TransitionLayout from '@/components/TransitionLayout';
+import Navbar from '@/components/Navbar';
 import ChatInterface from '@/components/ChatInterface';
 import SuggestedPromptsSidebar from '@/components/SuggestedPromptsSidebar';
+import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { getSuggestedPrompts } from '@/utils/mbtiCalculator';
+import { Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Chat = () => {
-  const [isPromptSidebarOpen, setIsPromptSidebarOpen] = useState(false);
+  const [searchParams] = useSearchParams();
+  const initialQuestion = searchParams.get('question') || undefined;
+  const mbtiType = searchParams.get('mbti') || undefined;
+  const [currentPrompt, setCurrentPrompt] = useState<string>(initialQuestion || '');
+  const [mbtiPrompts, setMbtiPrompts] = useState<string[]>([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
-  const togglePromptSidebar = () => {
-    setIsPromptSidebarOpen(!isPromptSidebarOpen);
+  useEffect(() => {
+    if (mbtiType) {
+      const prompts = getSuggestedPrompts(mbtiType || 'general');
+      setMbtiPrompts(prompts);
+    }
+  }, [mbtiType]);
+  
+  const handleSelectPrompt = (prompt: string) => {
+    setCurrentPrompt(prompt);
+    
+    setTimeout(() => {
+      const textareaElement = document.querySelector('textarea');
+      if (textareaElement) {
+        textareaElement.value = prompt;
+        textareaElement.focus();
+        
+        const event = new Event('input', { bubbles: true });
+        textareaElement.dispatchEvent(event);
+        
+        setTimeout(() => {
+          const enterEvent = new KeyboardEvent('keydown', {
+            key: 'Enter',
+            code: 'Enter',
+            bubbles: true
+          });
+          textareaElement.dispatchEvent(enterEvent);
+        }, 50);
+      }
+    }, 100);
   };
   
-  const handlePromptSelect = (prompt: string) => {
-    // This will be handled by the ChatInterface component
-    console.log("Selected prompt:", prompt);
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
   };
   
   return (
     <TransitionLayout>
-      <div className="min-h-screen">
-        <Navbar />
-        
-        <SuggestedPromptsSidebar 
-          onSelectPrompt={handlePromptSelect}
-          isOpen={isPromptSidebarOpen}
-          onToggle={togglePromptSidebar}
-        />
-        
-        <main className="container pt-20 pb-4 px-0 md:px-4 h-[calc(100vh-80px)] flex flex-col">
-          <motion.div
-            variants={pageVariants}
-            initial="initial"
-            animate="enter"
-            exit="exit"
-            className="flex flex-col h-full"
-          >
-            <div className="flex justify-between items-center px-4 py-2">
-              <div className="flex items-center">
-                <Bot className="h-5 w-5 text-blue-500 mr-2" />
-                <h1 className="text-lg font-medium">Career Assistant</h1>
+      <Navbar />
+      <div className="flex h-screen w-full pt-[72px] overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden relative w-full">
+          <div className="px-4 py-3 border-b bg-background sticky top-0 z-10 hover-shadow">
+            <div className="max-w-5xl mx-auto flex items-center">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
+                className="mr-3 h-8 w-8 flex-shrink-0"
+                aria-label="Toggle sidebar"
+              >
+                <Lightbulb className="h-5 w-5" />
+              </Button>
+              
+              <div className="flex-1">
+                <h1 className="text-xl md:text-2xl font-display font-bold tracking-tight text-center">
+                  Chat with Your Career Assistant
+                </h1>
+                {mbtiType && (
+                  <div className="flex justify-center mt-2">
+                    <div className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
+                      MBTI: {mbtiType}
+                    </div>
+                  </div>
+                )}
               </div>
               
-              <div className="flex">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={togglePromptSidebar}
-                  className="flex items-center gap-2"
-                >
-                  <PanelLeftOpen className="h-4 w-4" />
-                  <span className="hidden sm:inline">Suggested Prompts</span>
-                </Button>
-              </div>
+              <div className="h-8 w-8"></div>
             </div>
-            
-            <div className="flex-1 overflow-hidden">
-              <ChatInterface />
-            </div>
-          </motion.div>
-        </main>
+          </div>
+          
+          <div className="flex-1 overflow-hidden">
+            <ChatInterface initialQuestion={currentPrompt} mbtiType={mbtiType} />
+          </div>
+        </div>
+
+        <SuggestedPromptsSidebar 
+          onSelectPrompt={handleSelectPrompt}
+          isOpen={sidebarOpen}
+          onToggle={toggleSidebar}
+        />
       </div>
     </TransitionLayout>
   );

@@ -1,107 +1,54 @@
 
-// Simple service to handle localStorage storage
-// This handles both get and set operations with typed data
+export interface StorageService {
+  saveAssessmentData(data: Record<string, any>): void;
+  getAssessmentData(): Record<string, any> | null;
+  clearAssessmentData(): void;
+  saveChatHistory(messages: any[]): void;
+  getChatHistory(): any[] | null;
+  clearChatHistory(): void;
+  get(key: string): any | null;
+  set(key: string, data: any): void;
+}
 
-/**
- * Storage keys used in the application
- */
-type StorageKey = 
-  | 'mbti_answers' 
-  | 'mbti_result' 
-  | 'chat_messages'
-  | 'career_assessment_answers'
-  | 'career_assessment_result'
-  | 'gemini_config';
+class LocalStorageService implements StorageService {
+  private readonly ASSESSMENT_KEY = 'career_assessment_data';
+  private readonly CHAT_HISTORY_KEY = 'career_chat_history';
 
-/**
- * Storage Service for managing browser localStorage with type safety
- */
-const StorageService = {
-  /**
-   * Store a value in localStorage
-   * @param key Storage key
-   * @param value Value to store
-   */
-  set: (key: StorageKey, value: any): void => {
-    try {
-      localStorage.setItem(key, JSON.stringify(value));
-    } catch (error) {
-      console.error(`Error storing ${key} in localStorage:`, error);
-    }
-  },
-
-  /**
-   * Retrieve a value from localStorage
-   * @param key Storage key
-   * @returns The stored value, or null if not found
-   */
-  get: (key: StorageKey): any => {
-    try {
-      const value = localStorage.getItem(key);
-      return value ? JSON.parse(value) : null;
-    } catch (error) {
-      console.error(`Error retrieving ${key} from localStorage:`, error);
-      return null;
-    }
-  },
-
-  /**
-   * Remove a value from localStorage
-   * @param key Storage key
-   */
-  remove: (key: StorageKey): void => {
-    try {
-      localStorage.removeItem(key);
-    } catch (error) {
-      console.error(`Error removing ${key} from localStorage:`, error);
-    }
-  },
-
-  /**
-   * Clear all application data from localStorage
-   */
-  clear: (): void => {
-    try {
-      localStorage.clear();
-    } catch (error) {
-      console.error('Error clearing localStorage:', error);
-    }
-  },
-
-  /**
-   * Save chat history to localStorage
-   */
-  saveChatHistory: (messages: any[]): void => {
-    try {
-      localStorage.setItem('chat_messages', JSON.stringify(messages));
-    } catch (error) {
-      console.error('Error saving chat history:', error);
-    }
-  },
-
-  /**
-   * Get chat history from localStorage
-   */
-  getChatHistory: (): any[] => {
-    try {
-      const messages = localStorage.getItem('chat_messages');
-      return messages ? JSON.parse(messages) : [];
-    } catch (error) {
-      console.error('Error retrieving chat history:', error);
-      return [];
-    }
-  },
-
-  /**
-   * Clear chat history from localStorage
-   */
-  clearChatHistory: (): void => {
-    try {
-      localStorage.removeItem('chat_messages');
-    } catch (error) {
-      console.error('Error clearing chat history:', error);
-    }
+  public saveAssessmentData(data: Record<string, any>): void {
+    localStorage.setItem(this.ASSESSMENT_KEY, JSON.stringify(data));
   }
-};
 
-export default StorageService;
+  public getAssessmentData(): Record<string, any> | null {
+    const data = localStorage.getItem(this.ASSESSMENT_KEY);
+    return data ? JSON.parse(data) : null;
+  }
+
+  public clearAssessmentData(): void {
+    localStorage.removeItem(this.ASSESSMENT_KEY);
+  }
+
+  public saveChatHistory(messages: any[]): void {
+    localStorage.setItem(this.CHAT_HISTORY_KEY, JSON.stringify(messages));
+  }
+
+  public getChatHistory(): any[] | null {
+    const history = localStorage.getItem(this.CHAT_HISTORY_KEY);
+    return history ? JSON.parse(history) : null;
+  }
+
+  public clearChatHistory(): void {
+    localStorage.removeItem(this.CHAT_HISTORY_KEY);
+  }
+
+  // Generic methods for storing and retrieving any data
+  public get(key: string): any | null {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : null;
+  }
+
+  public set(key: string, data: any): void {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+}
+
+export default new LocalStorageService();

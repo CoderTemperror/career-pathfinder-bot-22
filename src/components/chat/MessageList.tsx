@@ -3,7 +3,7 @@ import React, { useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { chatMessageAnimation } from '@/utils/animations';
 import UserMessage from './UserMessage';
-import EditableAssistantMessage from './EditableAssistantMessage';
+import AssistantMessage from './AssistantMessage';
 import ThinkingIndicator from './ThinkingIndicator';
 import type { ChatMessage } from '@/types';
 
@@ -12,15 +12,13 @@ interface MessageListProps {
   isLoading: boolean;
   onEditMessage: (messageId: string, content: string) => void;
   onReuseMessage: (message: ChatMessage) => void;
-  onDeleteMessage: (messageId: string) => void;
 }
 
 const MessageList = ({ 
   messages, 
   isLoading, 
   onEditMessage, 
-  onReuseMessage,
-  onDeleteMessage
+  onReuseMessage 
 }: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -44,11 +42,7 @@ const MessageList = ({
                 onReuse={onReuseMessage}
               />
             ) : (
-              <EditableAssistantMessage 
-                message={message} 
-                onEdit={onEditMessage} 
-                onDelete={onDeleteMessage}
-              />
+              <AssistantMessage message={message} />
             )}
           </motion.div>
         ))}

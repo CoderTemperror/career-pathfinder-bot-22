@@ -23,7 +23,6 @@ const ChatInterface = ({ className = "", initialQuestion, mbtiType }: ChatInterf
     handleSendMessage,
     handleReset,
     handleEditMessage,
-    handleDeleteMessage,
     handleReuseMessage
   } = useChatMessages({ initialQuestion, mbtiType, resetOnRefresh: true });
 
@@ -52,7 +51,6 @@ const ChatInterface = ({ className = "", initialQuestion, mbtiType }: ChatInterf
           isLoading={isLoading}
           onEditMessage={handleEditMessage}
           onReuseMessage={handleReuseMessage}
-          onDeleteMessage={handleDeleteMessage}
         />
       </div>
       
