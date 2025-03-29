@@ -93,6 +93,9 @@ const SuggestedPromptsSidebar = ({ onSelectPrompt, isOpen, onToggle }: Suggested
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed top-[72px] left-0 z-50 h-[calc(100vh-72px)] w-[360px] md:w-[400px] bg-background border-r shadow-lg overflow-hidden flex flex-col"
           >
+            {/* Add a solid background div that extends from the top of the sidebar */}
+            <div className="absolute top-0 left-0 right-0 h-14 bg-background z-10"></div>
+            
             <div className="py-4 px-4 flex-1 overflow-y-auto scrollbar-thin">
               <div className="flex justify-between items-center mb-4 sticky top-0 pt-2 pb-2 bg-background z-10 border-b">
                 <h2 className="text-lg font-semibold flex items-center text-blue-500 dark:text-blue-400">
