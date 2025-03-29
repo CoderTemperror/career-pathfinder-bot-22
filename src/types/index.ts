@@ -1,13 +1,8 @@
-
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: 'user' | 'assistant';
   content: string;
   timestamp: Date | string;
-  metadata?: {
-    model?: string;
-    [key: string]: any;
-  };
 }
 
 export interface Career {
@@ -62,3 +57,11 @@ export interface Resource {
   type: 'Article' | 'Course' | 'Tool' | 'Community';
   tags: string[];
 }
+
+export type StorageKey = 
+  | 'mbti_answers' 
+  | 'mbti_result' 
+  | 'chat_messages'
+  | 'career_assessment_answers'
+  | 'career_assessment_result'
+  | 'gemini_config';
