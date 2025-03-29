@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PencilLine, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -14,6 +14,7 @@ interface UserMessageProps {
 const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(message.content);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleStartEditing = () => {
     setIsEditing(true);
@@ -30,16 +31,35 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
     onEdit(message.id, editedContent);
     setIsEditing(false);
   };
+  
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // If Enter is pressed without Shift, save the edit
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSaveEdit();
+    }
+  };
+  
+  // Focus the textarea when editing starts
+  useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+      // Place cursor at the end of text
+      const length = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(length, length);
+    }
+  }, [isEditing]);
 
   return (
     <div className="user-message max-w-[80%] break-words group">
       {isEditing ? (
         <div>
           <Textarea
+            ref={textareaRef}
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
+            onKeyDown={handleKeyDown}
             className="mb-2 min-h-[30px] max-h-[60px] text-sm bg-blue-600 border-blue-400 text-white placeholder:text-blue-200 resize-none"
-            autoFocus
           />
           <div className="flex justify-end gap-2">
             <Button 

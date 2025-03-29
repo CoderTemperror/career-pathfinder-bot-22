@@ -186,16 +186,74 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
     toast.success("Started a new conversation");
   };
   
-  const handleEditMessage = (messageId: string, content: string) => {
+  const handleEditMessage = async (messageId: string, content: string) => {
     if (content.trim() === "") return;
     
-    setMessages(prev => 
-      prev.map(msg => 
-        msg.id === messageId 
-          ? { ...msg, content }
-          : msg
-      )
-    );
+    // Find the edited message index
+    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+    if (messageIndex === -1) return;
+    
+    // Check if this is a user message
+    const editedMessage = messages[messageIndex];
+    if (editedMessage.role !== 'user') return;
+    
+    // Create a new array with the edited message
+    const updatedMessages = [...messages];
+    updatedMessages[messageIndex] = {
+      ...editedMessage,
+      content: content,
+      timestamp: new Date(),
+    };
+    
+    // Remove AI response that came after this message (if any)
+    if (messageIndex + 1 < messages.length && updatedMessages[messageIndex + 1].role === 'assistant') {
+      updatedMessages.splice(messageIndex + 1, 1);
+    }
+    
+    // Update messages state
+    setMessages(updatedMessages);
+    
+    // Now generate a new AI response for the edited message
+    setIsLoading(true);
+    
+    try {
+      const aiResponseText = await getAIResponse(content);
+      
+      const aiMessage: ChatMessage = {
+        id: uuidv4(),
+        role: 'assistant' as 'assistant',
+        content: aiResponseText,
+        timestamp: new Date(),
+      };
+      
+      // Insert the new AI message after the edited user message
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages.splice(messageIndex + 1, 0, aiMessage);
+        return newMessages;
+      });
+      
+      toast.success("Generated new response based on edited message");
+    } catch (error) {
+      console.error("Error getting AI response for edited message:", error);
+      
+      toast.error("Failed to get a new response. Please try again.");
+      
+      const errorMessage: ChatMessage = {
+        id: uuidv4(),
+        role: 'assistant' as 'assistant',
+        content: "I'm sorry, I'm having trouble responding to your edited message right now. Please try again later.",
+        timestamp: new Date(),
+      };
+      
+      setMessages(prev => {
+        const newMessages = [...prev];
+        newMessages.splice(messageIndex + 1, 0, errorMessage);
+        return newMessages;
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
   
   const handleReuseMessage = (message: ChatMessage) => {
