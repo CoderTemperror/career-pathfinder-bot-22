@@ -1,39 +1,20 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { pageVariants } from '@/utils/animations';
-import { Bot, PanelLeftOpen, ListFilter } from 'lucide-react';
+import { Bot, PanelLeftOpen } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import TransitionLayout from '@/components/TransitionLayout';
 import ChatInterface from '@/components/ChatInterface';
 import SuggestedPromptsSidebar from '@/components/SuggestedPromptsSidebar';
-import CareerReportDisplay from '@/components/CareerReportDisplay';
 import { Button } from '@/components/ui/button';
-import { useSearchParams } from 'react-router-dom';
-import StorageService from '@/services/storage';
-import type { CareerReport } from '@/utils/careerAssessmentCalculator';
 
 const Chat = () => {
   const [isPromptSidebarOpen, setIsPromptSidebarOpen] = useState(false);
-  const [searchParams] = useSearchParams();
-  const [showResults, setShowResults] = useState(false);
-  const [careerReport, setCareerReport] = useState<CareerReport | null>(null);
   
   const togglePromptSidebar = () => {
     setIsPromptSidebarOpen(!isPromptSidebarOpen);
   };
-  
-  // Check for career assessment parameter
-  useEffect(() => {
-    const careerAssessmentParam = searchParams.get('career_assessment');
-    if (careerAssessmentParam === 'completed') {
-      const savedReport = StorageService.get('career_assessment_result');
-      if (savedReport) {
-        setCareerReport(savedReport);
-        setShowResults(true);
-      }
-    }
-  }, [searchParams]);
   
   const handlePromptSelect = (prompt: string) => {
     // This will be handled by the ChatInterface component
@@ -75,32 +56,12 @@ const Chat = () => {
                   <PanelLeftOpen className="h-4 w-4" />
                   <span className="hidden sm:inline">Suggested Prompts</span>
                 </Button>
-                
-                {careerReport && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowResults(!showResults)}
-                    className="ml-2 flex items-center gap-2"
-                  >
-                    <ListFilter className="h-4 w-4" />
-                    <span className="hidden sm:inline">
-                      {showResults ? "Hide Assessment Results" : "Show Assessment Results"}
-                    </span>
-                  </Button>
-                )}
               </div>
             </div>
             
-            {showResults && careerReport ? (
-              <div className="flex-1 overflow-y-auto px-4 py-6">
-                <CareerReportDisplay report={careerReport} />
-              </div>
-            ) : (
-              <div className="flex-1 overflow-hidden">
-                <ChatInterface />
-              </div>
-            )}
+            <div className="flex-1 overflow-hidden">
+              <ChatInterface />
+            </div>
           </motion.div>
         </main>
       </div>
