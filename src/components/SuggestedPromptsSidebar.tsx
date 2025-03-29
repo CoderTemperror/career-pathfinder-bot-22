@@ -1,3 +1,4 @@
+
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -110,7 +111,7 @@ const SuggestedPromptsSidebar = ({ onSelectPrompt, isOpen, onToggle }: Suggested
               
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-medium mb-3 text-foreground">Career Streams After 12th</h3>
+                  <h3 className="text-base font-medium mb-3 text-foreground sticky top-[56px] bg-background/95 backdrop-blur-sm z-10 py-2">Career Streams After 12th</h3>
                   <div className="grid grid-cols-1 gap-2">
                     {careerStreams.map((stream, index) => (
                       <Button
@@ -134,7 +135,7 @@ const SuggestedPromptsSidebar = ({ onSelectPrompt, isOpen, onToggle }: Suggested
 
                 {promptCategories.map((category, categoryIndex) => (
                   <div key={categoryIndex}>
-                    <h3 className="text-base font-medium mb-2 text-foreground">{category.title}</h3>
+                    <h3 className="text-base font-medium mb-2 text-foreground sticky top-[56px] bg-background/95 backdrop-blur-sm z-10 py-2">{category.title}</h3>
                     <div className="grid grid-cols-1 gap-1.5">
                       {category.prompts.map((prompt, promptIndex) => (
                         <Button
