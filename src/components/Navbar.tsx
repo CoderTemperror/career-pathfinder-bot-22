@@ -59,14 +59,14 @@ const Navbar = () => {
               </Link>
               
               <Link
-                to="/mbti"
+                to="/career-assessment"
                 className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
-                  location.pathname === "/mbti"
+                  location.pathname === "/career-assessment"
                     ? "bg-primary/10 font-medium text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`}
               >
-                MBTI Test
+                Career Assessment Test
               </Link>
               
               <Link
@@ -122,14 +122,14 @@ const Navbar = () => {
                 Home
               </Link>
               <Link
-                to="/mbti"
+                to="/career-assessment"
                 className={`block px-3 py-2 rounded-md w-full text-center ${
-                  location.pathname === "/mbti"
+                  location.pathname === "/career-assessment"
                     ? "bg-primary/10 font-medium text-foreground"
                     : "text-muted-foreground hover:bg-accent"
                 }`}
               >
-                MBTI Test
+                Career Assessment Test
               </Link>
               <Link
                 to="/chat"

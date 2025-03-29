@@ -1,100 +1,108 @@
-import TransitionLayout from '@/components/TransitionLayout';
+
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { pageVariants } from '@/utils/animations';
+import { Bot, PanelLeftOpen, ListFilter } from 'lucide-react';
 import Navbar from '@/components/Navbar';
+import TransitionLayout from '@/components/TransitionLayout';
 import ChatInterface from '@/components/ChatInterface';
 import SuggestedPromptsSidebar from '@/components/SuggestedPromptsSidebar';
-import { useSearchParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { getSuggestedPrompts } from '@/utils/mbtiCalculator';
-import { Lightbulb } from 'lucide-react';
+import CareerReportDisplay from '@/components/CareerReportDisplay';
 import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'react-router-dom';
+import StorageService from '@/services/storage';
+import type { CareerReport } from '@/utils/careerAssessmentCalculator';
 
 const Chat = () => {
+  const [isPromptSidebarOpen, setIsPromptSidebarOpen] = useState(false);
   const [searchParams] = useSearchParams();
-  const initialQuestion = searchParams.get('question') || undefined;
-  const mbtiType = searchParams.get('mbti') || undefined;
-  const [currentPrompt, setCurrentPrompt] = useState<string>(initialQuestion || '');
-  const [mbtiPrompts, setMbtiPrompts] = useState<string[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [careerReport, setCareerReport] = useState<CareerReport | null>(null);
   
-  useEffect(() => {
-    if (mbtiType) {
-      const prompts = getSuggestedPrompts(mbtiType || 'general');
-      setMbtiPrompts(prompts);
-    }
-  }, [mbtiType]);
-  
-  const handleSelectPrompt = (prompt: string) => {
-    setCurrentPrompt(prompt);
-    
-    setTimeout(() => {
-      const textareaElement = document.querySelector('textarea');
-      if (textareaElement) {
-        textareaElement.value = prompt;
-        textareaElement.focus();
-        
-        const event = new Event('input', { bubbles: true });
-        textareaElement.dispatchEvent(event);
-        
-        setTimeout(() => {
-          const enterEvent = new KeyboardEvent('keydown', {
-            key: 'Enter',
-            code: 'Enter',
-            bubbles: true
-          });
-          textareaElement.dispatchEvent(enterEvent);
-        }, 50);
-      }
-    }, 100);
+  const togglePromptSidebar = () => {
+    setIsPromptSidebarOpen(!isPromptSidebarOpen);
   };
   
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+  // Check for career assessment parameter
+  useEffect(() => {
+    const careerAssessmentParam = searchParams.get('career_assessment');
+    if (careerAssessmentParam === 'completed') {
+      const savedReport = StorageService.get('career_assessment_result');
+      if (savedReport) {
+        setCareerReport(savedReport);
+        setShowResults(true);
+      }
+    }
+  }, [searchParams]);
+  
+  const handlePromptSelect = (prompt: string) => {
+    // This will be handled by the ChatInterface component
+    console.log("Selected prompt:", prompt);
   };
   
   return (
     <TransitionLayout>
-      <Navbar />
-      <div className="flex h-screen w-full pt-[72px] overflow-hidden">
-        <div className="flex-1 flex flex-col overflow-hidden relative w-full">
-          <div className="px-4 py-3 border-b bg-background sticky top-0 z-10 hover-shadow">
-            <div className="max-w-5xl mx-auto flex items-center">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={toggleSidebar}
-                className="mr-3 h-8 w-8 flex-shrink-0"
-                aria-label="Toggle sidebar"
-              >
-                <Lightbulb className="h-5 w-5" />
-              </Button>
-              
-              <div className="flex-1">
-                <h1 className="text-xl md:text-2xl font-display font-bold tracking-tight text-center">
-                  Chat with Your Career Assistant
-                </h1>
-                {mbtiType && (
-                  <div className="flex justify-center mt-2">
-                    <div className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                      MBTI: {mbtiType}
-                    </div>
-                  </div>
-                )}
+      <div className="min-h-screen">
+        <Navbar />
+        
+        <SuggestedPromptsSidebar 
+          onSelectPrompt={handlePromptSelect}
+          isOpen={isPromptSidebarOpen}
+          onToggle={togglePromptSidebar}
+        />
+        
+        <main className="container pt-20 pb-4 px-0 md:px-4 h-[calc(100vh-80px)] flex flex-col">
+          <motion.div
+            variants={pageVariants}
+            initial="initial"
+            animate="enter"
+            exit="exit"
+            className="flex flex-col h-full"
+          >
+            <div className="flex justify-between items-center px-4 py-2">
+              <div className="flex items-center">
+                <Bot className="h-5 w-5 text-blue-500 mr-2" />
+                <h1 className="text-lg font-medium">Career Assistant</h1>
               </div>
               
-              <div className="h-8 w-8"></div>
+              <div className="flex">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={togglePromptSidebar}
+                  className="flex items-center gap-2"
+                >
+                  <PanelLeftOpen className="h-4 w-4" />
+                  <span className="hidden sm:inline">Suggested Prompts</span>
+                </Button>
+                
+                {careerReport && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowResults(!showResults)}
+                    className="ml-2 flex items-center gap-2"
+                  >
+                    <ListFilter className="h-4 w-4" />
+                    <span className="hidden sm:inline">
+                      {showResults ? "Hide Assessment Results" : "Show Assessment Results"}
+                    </span>
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
-          
-          <div className="flex-1 overflow-hidden">
-            <ChatInterface initialQuestion={currentPrompt} mbtiType={mbtiType} />
-          </div>
-        </div>
-
-        <SuggestedPromptsSidebar 
-          onSelectPrompt={handleSelectPrompt}
-          isOpen={sidebarOpen}
-          onToggle={toggleSidebar}
-        />
+            
+            {showResults && careerReport ? (
+              <div className="flex-1 overflow-y-auto px-4 py-6">
+                <CareerReportDisplay report={careerReport} />
+              </div>
+            ) : (
+              <div className="flex-1 overflow-hidden">
+                <ChatInterface />
+              </div>
+            )}
+          </motion.div>
+        </main>
       </div>
     </TransitionLayout>
   );
