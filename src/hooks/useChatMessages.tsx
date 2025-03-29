@@ -1,9 +1,17 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { toast } from 'sonner';
-import GeminiService from '@/services/gemini';
 import storageService from '@/services/storage';
+import { getAIResponse } from '@/services/aiResponseService';
+import { 
+  createUserMessage, 
+  createAssistantMessage, 
+  createWelcomeMessage,
+  createErrorMessage,
+  showNewConversationToast,
+  showRegeneratedResponseToast,
+  showResponseErrorToast
+} from '@/utils/chatMessageUtils';
 import type { ChatMessage } from '@/types';
 
 interface UseChatMessagesOptions {
@@ -13,10 +21,6 @@ interface UseChatMessagesOptions {
 }
 
 export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = false }: UseChatMessagesOptions = {}) {
-  const defaultWelcomeMessage = mbtiType ? 
-    `Based on your assessment, your MBTI type is ${mbtiType}. This personality type has specific career strengths and preferences. How can I help you explore career paths that align with your ${mbtiType} personality type?` :
-    "Hi there! I'm your Career Pathfinder assistant. I can help you discover suitable careers based on your background, skills, and interests. What would you like to explore today?";
-
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState(initialQuestion || "");
   const [isLoading, setIsLoading] = useState(false);
@@ -49,14 +53,9 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
       setMessages(processedMessages);
     } else {
       // Set default welcome message if no history exists
-      setMessages([{
-        id: '1',
-        role: 'assistant' as 'assistant',
-        content: defaultWelcomeMessage,
-        timestamp: new Date(),
-      }]);
+      setMessages([createWelcomeMessage(mbtiType)]);
     }
-  }, [mbtiType, defaultWelcomeMessage, resetOnRefresh]);
+  }, [mbtiType, resetOnRefresh]);
 
   // Save messages to local storage whenever they change
   useEffect(() => {
@@ -85,105 +84,37 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
     }
   }, [initialQuestion]);
 
-  const getAIResponse = async (userMessage: string): Promise<string> => {
-    try {
-      // Create a system prompt with career guidance instructions
-      const systemPrompt = `You are a helpful career advisor. Your goal is to help users explore career options based on their skills, interests, education, and preferences. 
-        Provide thoughtful, personalized career guidance. Ask follow-up questions to better understand the user's situation. 
-        Be concise but thorough, avoiding overly generic advice. Focus on providing actionable insights and specific career paths that might suit the user.
-        
-        Only answer questions related to careers, education, colleges, exams, and professional development. 
-        If asked about unrelated topics, politely explain that you can only assist with career guidance and education-related questions.
-        
-        When providing career recommendations, include:
-        1. Educational paths and qualifications
-        2. Top colleges in India and worldwide
-        3. Required entrance exams or qualifications
-        4. Skills needed for success
-        5. Job profiles and opportunities
-        6. Future scope and growth potential
-        7. Salary ranges in different countries
-        8. Potential challenges and advantages
-        
-        ${mbtiType ? `\nThe user's MBTI type is ${mbtiType}. Consider this personality type when providing career advice and suggestions.` : ''}`;
-      
-      // Send the system prompt as a separate message for the API
-      const messages = [
-        {
-          role: 'system' as 'system',
-          content: systemPrompt
-        },
-        {
-          role: 'user' as 'user',
-          content: userMessage
-        }
-      ];
-      
-      const response = await GeminiService.generateChatCompletion(messages);
-      
-      return response;
-    } catch (error) {
-      console.error("Error with AI:", error);
-      throw error;
-    }
-  };
-
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
     
-    const userMessage: ChatMessage = {
-      id: uuidv4(),
-      role: 'user' as 'user',
-      content: inputValue,
-      timestamp: new Date(),
-    };
+    const userMessage = createUserMessage(inputValue);
     
     setMessages(prev => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
     
     try {
-      const aiResponseText = await getAIResponse(inputValue);
-      
-      const aiMessage: ChatMessage = {
-        id: uuidv4(),
-        role: 'assistant' as 'assistant',
-        content: aiResponseText,
-        timestamp: new Date(),
-      };
+      const aiResponseText = await getAIResponse(inputValue, mbtiType);
+      const aiMessage = createAssistantMessage(aiResponseText);
       
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error getting AI response:", error);
-      
-      toast.error("Failed to get a response. Please try again.");
-      
-      const errorMessage: ChatMessage = {
-        id: uuidv4(),
-        role: 'assistant' as 'assistant',
-        content: "I'm sorry, I'm having trouble responding right now. Please try again later.",
-        timestamp: new Date(),
-      };
-      
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => [...prev, createErrorMessage()]);
+      showResponseErrorToast();
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleReset = () => {
-    const newWelcomeMessage: ChatMessage = {
-      id: uuidv4(),
-      role: 'assistant' as 'assistant',
-      content: defaultWelcomeMessage,
-      timestamp: new Date(),
-    };
+    const newWelcomeMessage = createWelcomeMessage(mbtiType);
     
     setMessages([newWelcomeMessage]);
     storageService.clearChatHistory();
     storageService.saveChatHistory([newWelcomeMessage]);
     
-    toast.success("Started a new conversation");
+    showNewConversationToast();
   };
   
   const handleEditMessage = async (messageId: string, content: string) => {
@@ -217,14 +148,8 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
     setIsLoading(true);
     
     try {
-      const aiResponseText = await getAIResponse(content);
-      
-      const aiMessage: ChatMessage = {
-        id: uuidv4(),
-        role: 'assistant' as 'assistant',
-        content: aiResponseText,
-        timestamp: new Date(),
-      };
+      const aiResponseText = await getAIResponse(content, mbtiType);
+      const aiMessage = createAssistantMessage(aiResponseText);
       
       // Insert the new AI message after the edited user message
       setMessages(prev => {
@@ -233,18 +158,13 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
         return newMessages;
       });
       
-      toast.success("Generated new response based on edited message");
+      showRegeneratedResponseToast();
     } catch (error) {
       console.error("Error getting AI response for edited message:", error);
       
-      toast.error("Failed to get a new response. Please try again.");
+      showResponseErrorToast();
       
-      const errorMessage: ChatMessage = {
-        id: uuidv4(),
-        role: 'assistant' as 'assistant',
-        content: "I'm sorry, I'm having trouble responding to your edited message right now. Please try again later.",
-        timestamp: new Date(),
-      };
+      const errorMessage = createErrorMessage("I'm sorry, I'm having trouble responding to your edited message right now. Please try again later.");
       
       setMessages(prev => {
         const newMessages = [...prev];
