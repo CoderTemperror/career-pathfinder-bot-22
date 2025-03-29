@@ -43,3 +43,14 @@ export const createErrorMessage = (customMessage?: string): ChatMessage => {
     customMessage || "I'm sorry, I'm having trouble responding right now. Please try again later."
   );
 };
+
+/**
+ * Edits an existing message with new content
+ */
+export const editMessage = (message: ChatMessage, newContent: string): ChatMessage => {
+  return {
+    ...message,
+    content: newContent,
+    timestamp: new Date().toISOString(),
+  };
+};

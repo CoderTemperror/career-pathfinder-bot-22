@@ -1,187 +1,220 @@
 
-import { useState, useEffect, useRef } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import storageService from '@/services/storage';
-import { getAIResponse } from '@/services/aiResponseService';
-import { 
-  createUserMessage, 
-  createAssistantMessage, 
-  createWelcomeMessage,
-  createErrorMessage,
-  showNewConversationToast,
-  showRegeneratedResponseToast,
-  showResponseErrorToast
-} from '@/utils/chatMessageUtils';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { toast } from 'sonner';
+import { createUserMessage, createAssistantMessage, createWelcomeMessage, createErrorMessage, editMessage } from '@/utils/chatMessages';
+import { chatStorage } from '@/utils/chatStorage';
+import { useResponseGenerator } from '@/hooks/useResponseGenerator';
+import { useQueryParams } from '@/hooks/useQueryParams';
 import type { ChatMessage } from '@/types';
 
-interface UseChatMessagesOptions {
+interface UseChatMessagesProps {
   initialQuestion?: string;
-  mbtiType?: string; 
+  mbtiType?: string;
   resetOnRefresh?: boolean;
 }
 
-export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = false }: UseChatMessagesOptions = {}) {
+export const useChatMessages = ({ 
+  initialQuestion, 
+  mbtiType,
+  resetOnRefresh = false,
+}: UseChatMessagesProps = {}) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputValue, setInputValue] = useState(initialQuestion || "");
-  const [isLoading, setIsLoading] = useState(false);
-  const initialQuestionSent = useRef(false);
+  const [inputValue, setInputValue] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
-  // Check for session identifier in localStorage
+  const isInitialRender = useRef(true);
+  const { generateResponse } = useResponseGenerator();
+  const { getInitialMessage } = useQueryParams();
+  
+  // Initialize chat messages
   useEffect(() => {
-    // If resetOnRefresh is true, we'll create a new session ID on each page load
-    if (resetOnRefresh) {
-      const currentSessionId = sessionStorage.getItem('chat_session_id');
-      const newSessionId = uuidv4();
+    const savedMessages = chatStorage.getMessages();
+    
+    // Check if it's the first render and if we should reset messages
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
       
-      // If there's no session ID or it's different (page was refreshed), reset the chat
-      if (!currentSessionId) {
-        sessionStorage.setItem('chat_session_id', newSessionId);
-        handleReset();
-        return;
+      // Get message from URL params
+      const initialMessage = getInitialMessage();
+      
+      // If initialQuestion, mbtiType, or query parameter is provided, start fresh
+      const shouldResetHistory = initialMessage || resetOnRefresh || initialQuestion || mbtiType;
+      
+      if (shouldResetHistory) {
+        // Clear saved messages and start fresh
+        setMessages([createWelcomeMessage()]);
+      } else if (savedMessages.length > 0) {
+        // Use saved messages
+        setMessages(savedMessages);
+      } else {
+        // Default welcome message
+        setMessages([createWelcomeMessage()]);
+      }
+      
+      // Process initial message if available
+      if (initialMessage) {
+        setTimeout(() => {
+          handleSendMessage(initialMessage);
+        }, 500);
+      } else if (initialQuestion) {
+        setTimeout(() => {
+          handleSendMessage(initialQuestion);
+        }, 500);
+      } else if (mbtiType) {
+        setTimeout(() => {
+          const message = `I've completed the MBTI assessment and my personality type is ${mbtiType}. What careers would be good for me based on this result?`;
+          handleSendMessage(message);
+        }, 500);
       }
     }
-    
-    // If we're not resetting or the session is the same, load saved messages
-    const savedMessages = storageService.getChatHistory();
-    
-    if (savedMessages && savedMessages.length > 0) {
-      // Convert date strings back to Date objects
-      const processedMessages = savedMessages.map(msg => ({
-        ...msg,
-        timestamp: new Date(msg.timestamp)
-      }));
-      setMessages(processedMessages);
-    } else {
-      // Set default welcome message if no history exists
-      setMessages([createWelcomeMessage(mbtiType)]);
-    }
-  }, [mbtiType, resetOnRefresh]);
-
-  // Save messages to local storage whenever they change
+  }, [initialQuestion, mbtiType, resetOnRefresh, getInitialMessage]);
+  
+  // Save messages to localStorage whenever they change
   useEffect(() => {
-    if (messages.length > 0) {
-      storageService.saveChatHistory(messages);
+    if (messages.length > 0 && !isInitialRender.current) {
+      chatStorage.saveMessages(messages);
     }
   }, [messages]);
   
-  useEffect(() => {
-    // Update input value if initialQuestion changes
-    if (initialQuestion) {
-      setInputValue(initialQuestion);
-    }
-  }, [initialQuestion]);
-
-  useEffect(() => {
-    // Send initial question only once when component mounts
-    if (initialQuestion && !initialQuestionSent.current) {
-      initialQuestionSent.current = true;
-      // Add a small delay to ensure the component is fully mounted
-      const timer = setTimeout(() => {
-        handleSendMessage();
-      }, 100);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [initialQuestion]);
-
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const handleSendMessage = useCallback(async (messageText?: string) => {
+    const content = messageText || inputValue;
     
-    const userMessage = createUserMessage(inputValue);
+    if (!content.trim()) return;
     
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue("");
+    // Add user message
+    const userMessage = createUserMessage(content);
+    
+    setMessages(prevMessages => [...prevMessages, userMessage]);
+    
+    // Clear input after sending
+    if (!messageText) {
+      setInputValue('');
+    }
+    
+    // Generate and add assistant response
     setIsLoading(true);
     
     try {
-      const aiResponseText = await getAIResponse(inputValue, mbtiType);
-      const aiMessage = createAssistantMessage(aiResponseText);
+      const assistantResponse = await generateResponse(content);
+      const assistantMessage = createAssistantMessage(assistantResponse);
       
-      setMessages(prev => [...prev, aiMessage]);
+      setMessages(prevMessages => [...prevMessages, assistantMessage]);
     } catch (error) {
-      console.error("Error getting AI response:", error);
-      setMessages(prev => [...prev, createErrorMessage()]);
-      showResponseErrorToast();
+      console.error("Error generating response:", error);
+      toast.error("Failed to generate response", {
+        description: "Please try again later.",
+      });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleReset = () => {
-    const newWelcomeMessage = createWelcomeMessage(mbtiType);
-    
-    setMessages([newWelcomeMessage]);
-    storageService.clearChatHistory();
-    storageService.saveChatHistory([newWelcomeMessage]);
-    
-    showNewConversationToast();
-  };
+  }, [inputValue, generateResponse]);
   
-  const handleEditMessage = async (messageId: string, content: string) => {
-    if (content.trim() === "") return;
-    
-    // Find the edited message index
-    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+  const handleEditMessage = useCallback(async (messageId: string, newContent: string) => {
+    // Find message to edit
+    const messageIndex = messages.findIndex(m => m.id === messageId);
     if (messageIndex === -1) return;
     
-    // Check if this is a user message
-    const editedMessage = messages[messageIndex];
-    if (editedMessage.role !== 'user') return;
+    const message = messages[messageIndex];
+    const updatedMessage = editMessage(message, newContent);
     
-    // Create a new array with the edited message
+    // Update the message
     const updatedMessages = [...messages];
-    updatedMessages[messageIndex] = {
-      ...editedMessage,
-      content: content,
-      timestamp: new Date(),
-    };
+    updatedMessages[messageIndex] = updatedMessage;
     
-    // Remove AI response that came after this message (if any)
-    if (messageIndex + 1 < messages.length && updatedMessages[messageIndex + 1].role === 'assistant') {
-      updatedMessages.splice(messageIndex + 1, 1);
+    // If it's an assistant message, just update it
+    if (message.role === 'assistant') {
+      setMessages(updatedMessages);
+      return;
     }
     
-    // Update messages state
+    // If it's a user message, update it and regenerate the assistant response
     setMessages(updatedMessages);
     
-    // Now generate a new AI response for the edited message
+    // If there's an assistant response after this message, remove it and generate a new one
+    if (messageIndex + 1 < messages.length && messages[messageIndex + 1].role === 'assistant') {
+      // Remove the assistant message
+      updatedMessages.splice(messageIndex + 1, 1);
+      setMessages(updatedMessages);
+      
+      // Generate a new response
+      setIsLoading(true);
+      
+      try {
+        const assistantResponse = await generateResponse(newContent);
+        const assistantMessage = createAssistantMessage(assistantResponse);
+        
+        // Add the new assistant message
+        updatedMessages.splice(messageIndex + 1, 0, assistantMessage);
+        setMessages(updatedMessages);
+      } catch (error) {
+        console.error("Error regenerating response:", error);
+        toast.error("Failed to update response", {
+          description: "Please try again later.",
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  }, [messages, generateResponse]);
+  
+  const handleDeleteMessage = useCallback(async (messageId: string) => {
+    // Find the message to delete
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    if (messageIndex === -1) return;
+    
+    const message = messages[messageIndex];
+    
+    // Only allow deleting assistant messages
+    if (message.role !== 'assistant') return;
+    
+    // Find the user message that triggered this response
+    let userMessageIndex = messageIndex - 1;
+    while (userMessageIndex >= 0 && messages[userMessageIndex].role !== 'user') {
+      userMessageIndex--;
+    }
+    
+    if (userMessageIndex < 0) return; // No user message found
+    
+    const userMessage = messages[userMessageIndex];
+    
+    // Remove the assistant message
+    const updatedMessages = [...messages];
+    updatedMessages.splice(messageIndex, 1);
+    setMessages(updatedMessages);
+    
+    // Generate a new response
     setIsLoading(true);
     
     try {
-      const aiResponseText = await getAIResponse(content, mbtiType);
-      const aiMessage = createAssistantMessage(aiResponseText);
+      const assistantResponse = await generateResponse(userMessage.content);
+      const assistantMessage = createAssistantMessage(assistantResponse);
       
-      // Insert the new AI message after the edited user message
-      setMessages(prev => {
-        const newMessages = [...prev];
-        newMessages.splice(messageIndex + 1, 0, aiMessage);
-        return newMessages;
-      });
-      
-      showRegeneratedResponseToast();
+      // Add the new assistant message where the old one was
+      updatedMessages.splice(messageIndex, 0, assistantMessage);
+      setMessages(updatedMessages);
     } catch (error) {
-      console.error("Error getting AI response for edited message:", error);
-      
-      showResponseErrorToast();
-      
-      const errorMessage = createErrorMessage("I'm sorry, I'm having trouble responding to your edited message right now. Please try again later.");
-      
-      setMessages(prev => {
-        const newMessages = [...prev];
-        newMessages.splice(messageIndex + 1, 0, errorMessage);
-        return newMessages;
+      console.error("Error regenerating response:", error);
+      toast.error("Failed to generate new response", {
+        description: "Please try again later.",
       });
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [messages, generateResponse]);
   
-  const handleReuseMessage = (message: ChatMessage) => {
-    if (isLoading) return;
+  const handleReuseMessage = useCallback((message: ChatMessage) => {
     setInputValue(message.content);
-    // Don't immediately send to allow user to edit if needed
-  };
-
+  }, []);
+  
+  const handleReset = useCallback(() => {
+    // Reset the chat to initial state
+    const welcomeMessage = createWelcomeMessage();
+    setMessages([welcomeMessage]);
+    chatStorage.saveMessages([welcomeMessage]);
+    setInputValue('');
+    toast.success("Started a new conversation");
+  }, []);
+  
   return {
     messages,
     inputValue,
@@ -190,6 +223,7 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
     handleSendMessage,
     handleReset,
     handleEditMessage,
+    handleDeleteMessage,
     handleReuseMessage
   };
-}
+};
