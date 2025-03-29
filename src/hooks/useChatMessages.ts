@@ -109,7 +109,7 @@ export const useChatMessages = ({
       id: uuidv4(),
       role: 'user',
       content: content.trim(),
-      timestamp: new Date().toISOString(),
+      timestamp: new Date(), // Fixed: create a Date object instead of string
     };
     
     // Update state with user message
@@ -127,7 +127,7 @@ export const useChatMessages = ({
         id: uuidv4(),
         role: 'assistant',
         content: assistantResponse,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(), // Fixed: create a Date object instead of string
       };
       
       setMessages(prev => [...prev, assistantMessage]);
@@ -146,7 +146,7 @@ export const useChatMessages = ({
       ...updatedMessages[messageIndex],
       content: newContent,
       edited: true,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date(), // Fixed: create a Date object instead of string
     };
     
     // Check if there's an assistant response following this message
@@ -173,7 +173,7 @@ export const useChatMessages = ({
           id: uuidv4(),
           role: 'assistant',
           content: assistantResponse,
-          timestamp: new Date().toISOString(),
+          timestamp: new Date(), // Fixed: create a Date object instead of string
         };
         
         setMessages([...updatedMessages, newAssistantMessage]);
@@ -209,4 +209,3 @@ export const useChatMessages = ({
     handleReset,
   };
 };
-
