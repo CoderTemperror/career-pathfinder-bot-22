@@ -94,7 +94,7 @@ const SuggestedPromptsSidebar = ({ onSelectPrompt, isOpen, onToggle }: Suggested
             className="fixed top-[72px] left-0 z-50 h-[calc(100vh-72px)] w-[360px] md:w-[400px] bg-background border-r shadow-lg overflow-hidden flex flex-col"
           >
             <div className="py-4 px-4 flex-1 overflow-y-auto scrollbar-thin">
-              <div className="flex justify-between items-center mb-4 sticky top-0 pt-2 pb-2 bg-background/95 backdrop-blur-sm z-10">
+              <div className="flex justify-between items-center mb-4 sticky top-0 pt-2 pb-2 bg-background z-10 border-b">
                 <h2 className="text-lg font-semibold flex items-center text-blue-500 dark:text-blue-400">
                   <Compass className="mr-2 h-5 w-5" />
                   Suggested Prompts
@@ -111,7 +111,7 @@ const SuggestedPromptsSidebar = ({ onSelectPrompt, isOpen, onToggle }: Suggested
               
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-base font-medium mb-3 text-foreground sticky top-[56px] bg-background/95 backdrop-blur-sm z-10 py-2">Career Streams After 12th</h3>
+                  <h3 className="text-base font-medium mb-3 text-foreground">Career Streams After 12th</h3>
                   <div className="grid grid-cols-1 gap-2">
                     {careerStreams.map((stream, index) => (
                       <Button
@@ -135,7 +135,7 @@ const SuggestedPromptsSidebar = ({ onSelectPrompt, isOpen, onToggle }: Suggested
 
                 {promptCategories.map((category, categoryIndex) => (
                   <div key={categoryIndex}>
-                    <h3 className="text-base font-medium mb-2 text-foreground sticky top-[56px] bg-background/95 backdrop-blur-sm z-10 py-2">{category.title}</h3>
+                    <h3 className="text-base font-medium mb-2 text-foreground">{category.title}</h3>
                     <div className="grid grid-cols-1 gap-1.5">
                       {category.prompts.map((prompt, promptIndex) => (
                         <Button
