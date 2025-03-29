@@ -10,7 +10,8 @@ type StorageKey =
   | 'mbti_result' 
   | 'chat_messages'
   | 'career_assessment_answers'
-  | 'career_assessment_result';
+  | 'career_assessment_result'
+  | 'gemini_config';
 
 /**
  * Storage Service for managing browser localStorage with type safety
@@ -64,6 +65,41 @@ const StorageService = {
       localStorage.clear();
     } catch (error) {
       console.error('Error clearing localStorage:', error);
+    }
+  },
+
+  /**
+   * Save chat history to localStorage
+   */
+  saveChatHistory: (messages: any[]): void => {
+    try {
+      localStorage.setItem('chat_messages', JSON.stringify(messages));
+    } catch (error) {
+      console.error('Error saving chat history:', error);
+    }
+  },
+
+  /**
+   * Get chat history from localStorage
+   */
+  getChatHistory: (): any[] => {
+    try {
+      const messages = localStorage.getItem('chat_messages');
+      return messages ? JSON.parse(messages) : [];
+    } catch (error) {
+      console.error('Error retrieving chat history:', error);
+      return [];
+    }
+  },
+
+  /**
+   * Clear chat history from localStorage
+   */
+  clearChatHistory: (): void => {
+    try {
+      localStorage.removeItem('chat_messages');
+    } catch (error) {
+      console.error('Error clearing chat history:', error);
     }
   }
 };
