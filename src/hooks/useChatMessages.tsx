@@ -9,7 +9,6 @@ import {
   createWelcomeMessage,
   createErrorMessage,
   showNewConversationToast,
-  showRegeneratedResponseToast,
   showResponseErrorToast
 } from '@/utils/chatMessageUtils';
 import type { ChatMessage } from '@/types';
@@ -158,7 +157,7 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
         return newMessages;
       });
       
-      showRegeneratedResponseToast();
+      // Removed the toast notification here
     } catch (error) {
       console.error("Error getting AI response for edited message:", error);
       

@@ -55,15 +55,9 @@ export const showNewConversationToast = () => {
 };
 
 /**
- * Shows a success toast for regenerated response
- */
-export const showRegeneratedResponseToast = () => {
-  toast.success("Generated new response based on edited message");
-};
-
-/**
  * Shows an error toast for failed response
  */
 export const showResponseErrorToast = () => {
   toast.error("Failed to get a new response. Please try again.");
 };
+
