@@ -48,16 +48,8 @@ export const createErrorMessage = (customMessage?: string): ChatMessage => {
 };
 
 /**
- * Shows a success toast for a new conversation
- */
-export const showNewConversationToast = () => {
-  toast.success("Started a new conversation");
-};
-
-/**
  * Shows an error toast for failed response
  */
 export const showResponseErrorToast = () => {
   toast.error("Failed to get a new response. Please try again.");
 };
-

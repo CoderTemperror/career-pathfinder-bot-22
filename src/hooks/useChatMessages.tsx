@@ -8,7 +8,6 @@ import {
   createAssistantMessage, 
   createWelcomeMessage,
   createErrorMessage,
-  showNewConversationToast,
   showResponseErrorToast
 } from '@/utils/chatMessageUtils';
 import type { ChatMessage } from '@/types';
@@ -113,7 +112,7 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
     storageService.clearChatHistory();
     storageService.saveChatHistory([newWelcomeMessage]);
     
-    showNewConversationToast();
+    // Removed toast notification here
   };
   
   const handleEditMessage = async (messageId: string, content: string) => {
