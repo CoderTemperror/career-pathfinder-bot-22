@@ -17,7 +17,7 @@ const AssistantMessage = ({ message }: AssistantMessageProps) => {
         <Bot className="w-4 h-4" />
       </Avatar>
       
-      <div className="overflow-hidden">
+      <div className="overflow-hidden text-left">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{

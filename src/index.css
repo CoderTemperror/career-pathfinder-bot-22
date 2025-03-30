@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
 
 @tailwind base;
@@ -240,4 +241,9 @@ html {
 /* Assistant message container styles */
 .assistant-message-container {
   @apply flex justify-start mb-6;
+}
+
+/* Explicitly set text alignment for assistant messages */
+.assistant-message-content {
+  @apply text-left;
 }
