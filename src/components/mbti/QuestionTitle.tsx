@@ -12,7 +12,7 @@ const QuestionTitle = ({ questionId }: QuestionTitleProps) => {
       opacity: 1, 
       y: 0,
       transition: {
-        duration: 0.3,
+        duration: 0.4,
         ease: [0.19, 1, 0.22, 1],
       } 
     },
@@ -20,7 +20,7 @@ const QuestionTitle = ({ questionId }: QuestionTitleProps) => {
       opacity: 0, 
       y: -20,
       transition: {
-        duration: 0.2,
+        duration: 0.3,
         ease: [0.19, 1, 0.22, 1],
       } 
     },
@@ -35,7 +35,7 @@ const QuestionTitle = ({ questionId }: QuestionTitleProps) => {
       variants={fadeVariants}
       className="text-center mb-6"
     >
-      <h2 className="text-xl md:text-2xl font-semibold">
+      <h2 className="text-xl md:text-2xl font-display font-semibold bg-gradient-to-r from-indigo-500 to-blue-600 bg-clip-text text-transparent inline-block">
         Which statement describes you better?
       </h2>
     </motion.div>

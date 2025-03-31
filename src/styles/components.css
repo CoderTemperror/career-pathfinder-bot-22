@@ -24,7 +24,7 @@
 
 /* Chat message bubble styles */
 .chat-message-user {
-  @apply bg-blue-500 text-white py-2 px-4 rounded-lg rounded-tr-none max-w-fit;
+  @apply bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg rounded-tr-none max-w-fit;
 }
 
 .chat-message-assistant {
@@ -61,4 +61,35 @@
 /* Assistant message container styles */
 .assistant-message-container {
   @apply flex justify-start mb-6;
+}
+
+/* Add subtle hover animation to buttons */
+button {
+  @apply transition-all duration-200;
+}
+
+/* Add subtle pulse animation to important buttons */
+.pulse-subtle {
+  animation: pulse-subtle 2s infinite;
+}
+
+@keyframes pulse-subtle {
+  0% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.2);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(79, 70, 229, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+  }
+}
+
+/* Add colorful gradient backgrounds for accent sections */
+.bg-gradient-soft {
+  @apply bg-gradient-to-r from-indigo-50 to-blue-50;
+}
+
+.bg-gradient-vivid {
+  @apply bg-gradient-to-r from-blue-500 to-indigo-600;
 }
