@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -26,9 +25,6 @@ const MBTIAssessment = () => {
     const savedMBTIAnswers = StorageService.get('mbti_answers');
     if (savedMBTIAnswers) {
       setAnswers(savedMBTIAnswers);
-      toast.info("Previous answers loaded", {
-        description: "You can continue from where you left off."
-      });
     }
   }, []);
   
