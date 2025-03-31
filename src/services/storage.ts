@@ -6,6 +6,8 @@ export interface StorageService {
   saveChatHistory(messages: any[]): void;
   getChatHistory(): any[] | null;
   clearChatHistory(): void;
+  saveMbtiType(type: string | null): void;
+  getMbtiType(): string | null;
   get(key: string): any | null;
   set(key: string, data: any): void;
 }
@@ -13,6 +15,7 @@ export interface StorageService {
 class LocalStorageService implements StorageService {
   private readonly ASSESSMENT_KEY = 'career_assessment_data';
   private readonly CHAT_HISTORY_KEY = 'career_chat_history';
+  private readonly MBTI_TYPE_KEY = 'career_mbti_type';
 
   public saveAssessmentData(data: Record<string, any>): void {
     localStorage.setItem(this.ASSESSMENT_KEY, JSON.stringify(data));
@@ -38,6 +41,19 @@ class LocalStorageService implements StorageService {
 
   public clearChatHistory(): void {
     localStorage.removeItem(this.CHAT_HISTORY_KEY);
+  }
+
+  // New methods to store and retrieve MBTI type
+  public saveMbtiType(type: string | null): void {
+    if (type) {
+      localStorage.setItem(this.MBTI_TYPE_KEY, type);
+    } else {
+      localStorage.removeItem(this.MBTI_TYPE_KEY);
+    }
+  }
+
+  public getMbtiType(): string | null {
+    return localStorage.getItem(this.MBTI_TYPE_KEY);
   }
 
   // Generic methods for storing and retrieving any data

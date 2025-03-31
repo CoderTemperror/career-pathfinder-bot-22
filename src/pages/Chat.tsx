@@ -7,21 +7,32 @@ import { useState, useEffect } from 'react';
 import { getSuggestedPrompts } from '@/utils/mbtiCalculator';
 import { Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import StorageService from '@/services/storage';
 
 const Chat = () => {
   const [searchParams] = useSearchParams();
   const initialQuestion = searchParams.get('question') || undefined;
-  const mbtiType = searchParams.get('mbti') || undefined;
+  const urlMbtiType = searchParams.get('mbti');
   const [currentPrompt, setCurrentPrompt] = useState<string>(initialQuestion || '');
   const [mbtiPrompts, setMbtiPrompts] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [storedMbtiType, setStoredMbtiType] = useState<string | null>(null);
   
   useEffect(() => {
-    if (mbtiType) {
-      const prompts = getSuggestedPrompts(mbtiType || 'general');
-      setMbtiPrompts(prompts);
+    if (urlMbtiType) {
+      StorageService.saveMbtiType(urlMbtiType);
+      setStoredMbtiType(urlMbtiType);
+    } else {
+      const savedType = StorageService.getMbtiType();
+      setStoredMbtiType(savedType);
     }
-  }, [mbtiType]);
+  }, [urlMbtiType]);
+  
+  useEffect(() => {
+    const type = storedMbtiType || 'general';
+    const prompts = getSuggestedPrompts(type);
+    setMbtiPrompts(prompts);
+  }, [storedMbtiType]);
   
   const handleSelectPrompt = (prompt: string) => {
     setCurrentPrompt(prompt);
@@ -72,10 +83,10 @@ const Chat = () => {
                 <h1 className="text-xl md:text-2xl font-display font-bold tracking-tight text-center">
                   Chat with Your Career Assistant
                 </h1>
-                {mbtiType && (
+                {storedMbtiType && (
                   <div className="flex justify-center mt-2">
                     <div className="inline-flex items-center bg-primary/10 text-primary px-3 py-1 rounded-full text-sm font-medium">
-                      MBTI: {mbtiType}
+                      MBTI: {storedMbtiType}
                     </div>
                   </div>
                 )}
@@ -86,7 +97,7 @@ const Chat = () => {
           </div>
           
           <div className="flex-1 overflow-hidden">
-            <ChatInterface initialQuestion={currentPrompt} mbtiType={mbtiType} />
+            <ChatInterface initialQuestion={currentPrompt} mbtiType={storedMbtiType || undefined} />
           </div>
         </div>
 

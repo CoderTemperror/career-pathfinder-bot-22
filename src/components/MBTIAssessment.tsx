@@ -91,6 +91,9 @@ const MBTIAssessment = () => {
       timestamp: new Date().toISOString()
     });
     
+    // Save MBTI type separately for persistent access from chat
+    StorageService.saveMbtiType(mbtiType);
+    
     toast.success(`Your personality type is ${mbtiType}!`, {
       description: personalityInfo.description,
     });
@@ -108,6 +111,8 @@ const MBTIAssessment = () => {
       setAnswers({});
       setCurrentQuestionIndex(0);
       StorageService.set('mbti_answers', {});
+      // Also clear the MBTI type when assessment is reset
+      StorageService.saveMbtiType(null);
       toast.info("Assessment reset", {
         description: "All answers have been cleared."
       });
