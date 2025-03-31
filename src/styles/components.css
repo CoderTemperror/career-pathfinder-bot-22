@@ -1,0 +1,64 @@
+
+/* Card hover effects */
+.hover-card {
+  @apply transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+}
+
+/* Glass effect */
+.glass {
+  @apply backdrop-blur-sm bg-background/70 border;
+}
+
+/* Z-index fixes for UI components */
+.z-navbar {
+  z-index: 50;
+}
+
+.z-sidebar {
+  z-index: 40;
+}
+
+.z-chat-input {
+  z-index: 20;
+}
+
+/* Chat message bubble styles */
+.chat-message-user {
+  @apply bg-blue-500 text-white py-2 px-4 rounded-lg rounded-tr-none max-w-fit;
+}
+
+.chat-message-assistant {
+  @apply bg-muted py-2 px-4 rounded-lg rounded-tl-none max-w-full text-left;
+}
+
+/* Prevent overflow content issues */
+.prose-chat {
+  @apply max-w-full overflow-hidden;
+}
+
+.prose-chat p {
+  @apply whitespace-pre-wrap break-words;
+}
+
+.prose-chat pre {
+  @apply max-w-full overflow-x-auto;
+}
+
+/* Full-width chat container */
+.chat-full-width {
+  @apply w-full max-w-5xl mx-auto px-4;
+}
+
+/* User message container styles */
+.user-message-container {
+  @apply flex justify-end mb-6;
+}
+
+.user-message {
+  @apply text-right;
+}
+
+/* Assistant message container styles */
+.assistant-message-container {
+  @apply flex justify-start mb-6;
+}
