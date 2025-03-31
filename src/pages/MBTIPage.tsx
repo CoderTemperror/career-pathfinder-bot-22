@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -46,14 +45,13 @@ const MBTIPage = () => {
   };
   
   const retakeTest = () => {
-    if (confirm("Are you sure you want to retake the test? This will reset your previous results.")) {
-      // Clear all MBTI data
-      StorageService.set('mbti_answers', {});
-      StorageService.set('mbti_result', null);
-      StorageService.saveMbtiType(null);
-      setHasCompletedAssessment(false);
-      setMbtiResult(null);
-    }
+    // Remove confirmation dialog and directly reset the test
+    // Clear all MBTI data
+    StorageService.set('mbti_answers', {});
+    StorageService.set('mbti_result', null);
+    StorageService.saveMbtiType(null);
+    setHasCompletedAssessment(false);
+    setMbtiResult(null);
   };
   
   return (

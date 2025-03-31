@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -107,18 +106,16 @@ const MBTIAssessment = () => {
   };
   
   const resetAssessment = () => {
-    if (confirm("Are you sure you want to reset all your answers?")) {
-      setAnswers({});
-      setCurrentQuestionIndex(0);
-      StorageService.set('mbti_answers', {});
-      // Also clear the MBTI result when assessment is reset
-      StorageService.set('mbti_result', null);
-      // Clear the MBTI type when assessment is reset
-      StorageService.saveMbtiType(null);
-      toast.info("Assessment reset", {
-        description: "All answers have been cleared."
-      });
-    }
+    setAnswers({});
+    setCurrentQuestionIndex(0);
+    StorageService.set('mbti_answers', {});
+    // Also clear the MBTI result when assessment is reset
+    StorageService.set('mbti_result', null);
+    // Clear the MBTI type when assessment is reset
+    StorageService.saveMbtiType(null);
+    toast.info("Assessment reset", {
+      description: "All answers have been cleared."
+    });
   };
   
   return (
