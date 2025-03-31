@@ -111,7 +111,9 @@ const MBTIAssessment = () => {
       setAnswers({});
       setCurrentQuestionIndex(0);
       StorageService.set('mbti_answers', {});
-      // Also clear the MBTI type when assessment is reset
+      // Also clear the MBTI result when assessment is reset
+      StorageService.set('mbti_result', null);
+      // Clear the MBTI type when assessment is reset
       StorageService.saveMbtiType(null);
       toast.info("Assessment reset", {
         description: "All answers have been cleared."

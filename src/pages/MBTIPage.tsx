@@ -1,95 +1,130 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import TransitionLayout from '@/components/TransitionLayout';
-import Navbar from '@/components/Navbar';
-import MBTIAssessment from '@/components/MBTIAssessment';
-import { Bot, ArrowRight, Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { 
+  PersonStanding, 
+  Brain, 
+  PanelRight, 
+  Sigma, 
+  ChevronRight, 
+  BadgeCheck,
+  RotateCcw
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { mbtiQuestions } from '@/utils/mbtiCalculator';
+import MBTIAssessment from '@/components/MBTIAssessment';
+import Navbar from '@/components/Navbar';
+import TransitionLayout from '@/components/TransitionLayout';
 import StorageService from '@/services/storage';
 
 const MBTIPage = () => {
-  const [hasPreviousResult, setHasPreviousResult] = useState(false);
-  const [previousType, setPreviousType] = useState<string | null>(null);
-  const [startNewAssessment, setStartNewAssessment] = useState(false);
+  const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
+  const [mbtiResult, setMbtiResult] = useState<any>(null);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   useEffect(() => {
-    // Check if user has a previous MBTI result
+    // Check if assessment was completed
     const savedResult = StorageService.get('mbti_result');
-    if (savedResult && savedResult.type) {
-      setHasPreviousResult(true);
-      setPreviousType(savedResult.type);
+    const savedAnswers = StorageService.get('mbti_answers') || {};
+    const allQuestionsAnswered = Object.keys(savedAnswers).length === mbtiQuestions.length;
+    
+    // Only consider the assessment complete if we have a result AND all questions are answered
+    if (savedResult && allQuestionsAnswered) {
+      setHasCompletedAssessment(true);
+      setMbtiResult(savedResult);
     } else {
-      // If no previous result, start assessment right away
-      setStartNewAssessment(true);
+      setHasCompletedAssessment(false);
+      setMbtiResult(null);
     }
   }, []);
   
-  const handleViewResults = () => {
-    if (previousType) {
-      navigate(`/chat?mbti=${previousType}`);
-    }
+  const startTest = () => {
+    setHasCompletedAssessment(false);
   };
   
-  const handleStartNew = () => {
-    setStartNewAssessment(true);
+  const retakeTest = () => {
+    if (confirm("Are you sure you want to retake the test? This will reset your previous results.")) {
+      // Clear all MBTI data
+      StorageService.set('mbti_answers', {});
+      StorageService.set('mbti_result', null);
+      StorageService.saveMbtiType(null);
+      setHasCompletedAssessment(false);
+      setMbtiResult(null);
+    }
   };
   
   return (
     <TransitionLayout>
       <Navbar />
-      <div className="min-h-screen pt-24 pb-12 px-6 overflow-x-hidden">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-3">
-              MBTI Personality Assessment
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover your personality type and get personalized career recommendations
-            </p>
-            
-            <div className="flex justify-center items-center mt-3">
-              <div className="inline-flex items-center bg-primary/10 px-3 py-1.5 rounded-full text-sm">
-                <Bot className="h-4 w-4 text-primary mr-1.5" />
-                Powered by advanced AI technology
-              </div>
-            </div>
-          </div>
-          
-          {hasPreviousResult && !startNewAssessment ? (
-            <div className="space-y-6 p-6 border rounded-xl bg-secondary/20">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center bg-green-500/20 p-3 rounded-full mb-3">
-                  <Check className="h-6 w-6 text-green-500" />
-                </div>
-                <h2 className="text-2xl font-semibold mb-1">You've Already Completed the Assessment</h2>
-                <p className="text-muted-foreground">
-                  Your personality type is <span className="font-bold text-primary">{previousType}</span>
-                </p>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
-                <Button 
-                  onClick={handleViewResults}
-                  className="flex items-center"
-                >
-                  View Career Recommendations
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  onClick={handleStartNew}
-                >
-                  Take Assessment Again
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <MBTIAssessment />
-          )}
+      <div className="container max-w-6xl mx-auto pt-24 pb-16 px-4">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">Personality Assessment</h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Discover your MBTI personality type to get career recommendations tailored to your natural strengths and preferences.
+          </p>
         </div>
+        
+        {hasCompletedAssessment ? (
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 mb-8">
+              <div className="flex items-start gap-4">
+                <div className="bg-primary/20 p-3 rounded-full">
+                  <BadgeCheck className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold mb-2">Your Assessment is Complete</h2>
+                  <p className="text-muted-foreground mb-4">
+                    Your personality type is <span className="font-bold text-primary">{mbtiResult.type}</span>
+                  </p>
+                  <p className="mb-4">{mbtiResult.description}</p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3 mt-2">
+                    <Button onClick={() => navigate('/chat')}>
+                      Chat with Career Advisor
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                    <Button variant="outline" onClick={retakeTest}>
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      Retake Test
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {mbtiResult.careers && mbtiResult.careers.length > 0 && (
+              <div className="bg-card border rounded-lg p-6">
+                <h3 className="text-lg font-semibold mb-4">Recommended Career Paths</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {mbtiResult.careers.map((career: string, index: number) => (
+                    <div 
+                      key={index} 
+                      className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2"
+                    >
+                      <PersonStanding className="h-4 w-4 text-primary" />
+                      <span>{career}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-semibold">MBTI Assessment</h2>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Sigma className="h-4 w-4" />
+                <span>{mbtiQuestions.length} Questions</span>
+              </div>
+            </div>
+            
+            <MBTIAssessment />
+          </div>
+        )}
       </div>
     </TransitionLayout>
   );
