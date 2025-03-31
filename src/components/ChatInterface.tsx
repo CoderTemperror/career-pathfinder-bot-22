@@ -1,9 +1,10 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import MessageList from './chat/MessageList';
 import ChatInput from './chat/ChatInput';
 import { useIsMobile } from '@/hooks/use-mobile';
+import StorageService from '@/services/storage';
 
 interface ChatInterfaceProps {
   className?: string;
@@ -14,6 +15,17 @@ interface ChatInterfaceProps {
 const ChatInterface = ({ className = "", initialQuestion, mbtiType }: ChatInterfaceProps) => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+  const [persistentMbtiType, setPersistentMbtiType] = useState<string | null>(null);
+  
+  // Load the persistent MBTI type on mount and when the prop changes
+  useEffect(() => {
+    if (mbtiType) {
+      setPersistentMbtiType(mbtiType);
+    } else {
+      const savedType = StorageService.getMbtiType();
+      setPersistentMbtiType(savedType);
+    }
+  }, [mbtiType]);
   
   const {
     messages,
@@ -24,7 +36,11 @@ const ChatInterface = ({ className = "", initialQuestion, mbtiType }: ChatInterf
     handleReset,
     handleEditMessage,
     handleReuseMessage
-  } = useChatMessages({ initialQuestion, mbtiType, resetOnRefresh: true });
+  } = useChatMessages({ 
+    initialQuestion, 
+    mbtiType: persistentMbtiType || undefined, 
+    resetOnRefresh: true 
+  });
 
   // Only scroll to bottom when user sends a new message or when assistant replies
   useEffect(() => {
