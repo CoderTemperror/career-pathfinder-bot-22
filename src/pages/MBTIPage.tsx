@@ -1,35 +1,12 @@
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Sigma } from 'lucide-react';
 import MBTIAssessment from '@/components/MBTIAssessment';
 import Navbar from '@/components/Navbar';
 import TransitionLayout from '@/components/TransitionLayout';
-import StorageService from '@/services/storage';
 import { mbtiQuestions } from '@/utils/mbtiCalculator';
 
 const MBTIPage = () => {
-  const [hasCompletedAssessment, setHasCompletedAssessment] = useState(false);
-  const [mbtiResult, setMbtiResult] = useState<any>(null);
-  const isMobile = useIsMobile();
-  
-  useEffect(() => {
-    // Check if assessment was completed
-    const savedResult = StorageService.get('mbti_result');
-    const savedAnswers = StorageService.get('mbti_answers') || {};
-    const allQuestionsAnswered = Object.keys(savedAnswers).length === mbtiQuestions.length;
-    
-    // Only consider the assessment complete if we have a result AND all questions are answered
-    if (savedResult && allQuestionsAnswered) {
-      setHasCompletedAssessment(true);
-      setMbtiResult(savedResult);
-    } else {
-      setHasCompletedAssessment(false);
-      setMbtiResult(null);
-    }
-  }, []);
-  
   return (
     <TransitionLayout>
       <Navbar />
