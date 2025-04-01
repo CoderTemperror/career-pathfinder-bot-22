@@ -1,4 +1,3 @@
-
 type MBTIQuestion = {
   id: number;
   dimension: 'EI' | 'SN' | 'TF' | 'JP';
@@ -77,6 +76,60 @@ export const mbtiQuestions: MBTIQuestion[] = [
     dimension: 'JP',
     optionA: "I tend to act quickly without overthinking, saying things as soon as they come to mind.",
     optionB: "I think things through thoroughly before acting, sometimes missing opportunities to speak up.",
+  },
+  {
+    id: 12,
+    dimension: 'EI',
+    optionA: "I prefer working in a quiet environment where I can focus deeply without interruptions.",
+    optionB: "I enjoy working in vibrant environments with lots of activity and opportunities to interact.",
+  },
+  {
+    id: 13,
+    dimension: 'JP',
+    optionA: "I like to plan my day in advance and prefer to stick to that plan.",
+    optionB: "I prefer to be spontaneous and adapt to circumstances as they arise.",
+  },
+  {
+    id: 14,
+    dimension: 'TF',
+    optionA: "When making decisions, I consider people's feelings and work to create harmony.",
+    optionB: "When making decisions, I focus on what makes logical sense regardless of how others feel.",
+  },
+  {
+    id: 15,
+    dimension: 'SN',
+    optionA: "I'm more curious about abstract ideas and theoretical concepts.",
+    optionB: "I'm more interested in facts, details, and practical applications.",
+  },
+  {
+    id: 16,
+    dimension: 'EI',
+    optionA: "After a busy day, I recharge by spending time alone or with a close friend.",
+    optionB: "After a busy day, I recharge by meeting friends or attending social events.",
+  },
+  {
+    id: 17,
+    dimension: 'JP',
+    optionA: "I prefer clear expectations and deadlines for projects I'm working on.",
+    optionB: "I prefer open-ended projects where I can adjust the process as I go.",
+  },
+  {
+    id: 18,
+    dimension: 'TF',
+    optionA: "I typically make decisions based on how I feel about the situation and the people involved.",
+    optionB: "I typically make decisions by analyzing facts and considering cause-and-effect relationships.",
+  },
+  {
+    id: 19,
+    dimension: 'SN',
+    optionA: "I prefer thinking about real things that can be verified through my senses.",
+    optionB: "I prefer thinking about possibilities and what could be rather than what is.",
+  },
+  {
+    id: 20,
+    dimension: 'EI',
+    optionA: "I tend to think out loud and talk through problems with others to solve them.",
+    optionB: "I prefer to think through problems in my head before sharing my thoughts.",
   },
 ];
 
