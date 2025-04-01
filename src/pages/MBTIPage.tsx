@@ -86,8 +86,8 @@ const MBTIPage = () => {
             transition={{ duration: 0.5 }}
             className="max-w-3xl mx-auto"
           >
-            <div className={`bg-primary/10 border border-primary/20 rounded-lg p-6 ${isMobile ? 'mb-6' : 'mb-8'}`}>
-              <div className={`flex ${isMobile ? 'flex-col items-center text-center' : 'items-start'} gap-4`}>
+            <div className="bg-primary/10 border border-primary/20 rounded-lg p-6 mb-8">
+              <div className="flex items-start gap-4">
                 <motion.div 
                   initial={{ scale: 0.8 }}
                   animate={{ scale: 1 }}
@@ -103,24 +103,17 @@ const MBTIPage = () => {
                 </motion.div>
                 <div>
                   <h2 className="text-xl font-semibold mb-2">Your Assessment is Complete</h2>
-                  <p className={`${isMobile ? 'text-lg' : ''} text-muted-foreground mb-4`}>
+                  <p className="text-muted-foreground mb-4">
                     Your personality type is <span className="font-bold text-blue-500">{mbtiResult.type}</span>
                   </p>
                   <p className="mb-4">{mbtiResult.description}</p>
                   
-                  <div className={`flex ${isMobile ? 'flex-col w-full' : 'flex-row'} gap-3 mt-2`}>
-                    <Button 
-                      onClick={() => navigate('/chat')} 
-                      className={`bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 transition-all duration-300 ${isMobile ? 'py-6' : ''}`}
-                    >
+                  <div className="flex flex-col sm:flex-row gap-3 mt-2">
+                    <Button onClick={() => navigate('/chat')} className="bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700 transition-all duration-300">
                       Chat with Career Advisor
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={retakeTest} 
-                      className={`hover:border-rose-400 hover:text-rose-500 transition-all duration-300 ${isMobile ? 'py-6' : ''}`}
-                    >
+                    <Button variant="outline" onClick={retakeTest} className="hover:border-rose-400 hover:text-rose-500 transition-all duration-300">
                       <RotateCcw className="mr-2 h-4 w-4" />
                       Retake Test
                     </Button>
@@ -132,7 +125,7 @@ const MBTIPage = () => {
             {mbtiResult.careers && mbtiResult.careers.length > 0 && (
               <div className="bg-card border rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4">Recommended Career Paths</h3>
-                <div className={`grid grid-cols-1 ${isMobile ? '' : 'md:grid-cols-2'} gap-3`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {mbtiResult.careers.map((career: string, index: number) => (
                     <motion.div 
                       key={index}
