@@ -1,3 +1,4 @@
+
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import TransitionLayout from '@/components/TransitionLayout';
@@ -11,25 +12,49 @@ const Index = () => {
   return (
     <TransitionLayout>
       <Navbar />
-      <div className="min-h-screen pt-24 px-6">
+      <div className="min-h-screen pt-24 px-6 bg-gradient-to-b from-background to-background/95">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <div className="mb-1">
-              <span className="text-sm text-muted-foreground font-medium">SBH 2025 Junior</span>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.5 }}
+              className="mb-1"
+            >
+              <span className="text-sm text-amber-500 font-medium">SBH 2025 Junior</span>
+            </motion.div>
             <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight mb-8">
-              <span className="inline-block">Find Your Perfect</span>{' '}
-              <span className="inline-block text-primary">Career Path</span>
+              <motion.span 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ duration: 0.7 }}
+                className="inline-block"
+              >
+                Find Your Perfect
+              </motion.span>{' '}
+              <motion.span 
+                initial={{ opacity: 0 }} 
+                animate={{ opacity: 1 }} 
+                transition={{ duration: 0.7, delay: 0.2 }}
+                className="inline-block bg-gradient-to-r from-indigo-500 to-blue-600 bg-clip-text text-transparent"
+              >
+                Career Path
+              </motion.span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            <motion.p 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ duration: 0.7, delay: 0.4 }}
+              className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-8"
+            >
               Discover careers that match your skills, interests, and personality
               with our AI-powered career guidance tools.
-            </p>
+            </motion.p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Button
                 size="lg"
                 onClick={() => navigate('/mbti')}
-                className="text-md px-6"
+                className="text-md px-6 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700"
               >
                 <Brain className="mr-2 h-5 w-5" />
                 Take MBTI Personality Test
@@ -38,9 +63,9 @@ const Index = () => {
                 size="lg"
                 onClick={() => navigate('/chat')}
                 variant="secondary"
-                className="text-md px-6"
+                className="text-md px-6 hover:border-blue-400/30 hover:shadow-sm"
               >
-                <MessageSquare className="mr-2 h-5 w-5" />
+                <MessageSquare className="mr-2 h-5 w-5 text-blue-500" />
                 Chat with AI Assistant
               </Button>
             </div>
@@ -51,10 +76,11 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-card rounded-xl p-6 border hover-shadow"
+              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.1)" }}
+              className="bg-card rounded-xl p-6 border hover:border-blue-400/30"
             >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <Brain className="h-6 w-6 text-primary" />
+              <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center mb-4">
+                <Brain className="h-6 w-6 text-blue-500" />
               </div>
               <h3 className="text-xl font-semibold mb-2">MBTI Personality Test</h3>
               <p className="text-muted-foreground">
@@ -66,10 +92,11 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="bg-card rounded-xl p-6 border hover-shadow"
+              whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.1)" }}
+              className="bg-card rounded-xl p-6 border hover:border-indigo-400/30"
             >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <MessageSquare className="h-6 w-6 text-primary" />
+              <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center mb-4">
+                <MessageSquare className="h-6 w-6 text-indigo-500" />
               </div>
               <h3 className="text-xl font-semibold mb-2">AI Career Guidance</h3>
               <p className="text-muted-foreground">
@@ -79,9 +106,14 @@ const Index = () => {
             </motion.div>
           </div>
 
-          <div className="bg-card rounded-xl p-8 border mb-16 hover-shadow">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-card rounded-xl p-8 border mb-16 hover:border-amber-400/30 hover:shadow-lg transition-all duration-300"
+          >
             <div className="flex items-center mb-6">
-              <Sparkles className="h-5 w-5 text-primary mr-2" />
+              <Sparkles className="h-5 w-5 text-amber-500 mr-2" />
               <h2 className="text-2xl font-semibold">AI-Powered Career Guidance</h2>
             </div>
             <p className="text-lg text-muted-foreground mb-4">
@@ -90,22 +122,31 @@ const Index = () => {
               personality. Get detailed insights on:
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-secondary/80 rounded-lg hover:bg-secondary transition-colors duration-300 hover:shadow-md">
-                <Lightbulb className="h-5 w-5 text-primary mb-2" />
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                className="p-4 bg-gradient-to-br from-blue-500/5 to-indigo-500/10 rounded-lg transition-colors duration-300 hover:shadow-md"
+              >
+                <Lightbulb className="h-5 w-5 text-blue-500 mb-2" />
                 <h3 className="font-medium">Career Matches</h3>
-              </div>
-              <div className="p-4 bg-secondary/80 rounded-lg hover:bg-secondary transition-colors duration-300 hover:shadow-md">
-                <Lightbulb className="h-5 w-5 text-primary mb-2" />
+              </motion.div>
+              <motion.div 
+                whileHover={{ scale: 1.03 }}
+                className="p-4 bg-gradient-to-br from-amber-500/5 to-rose-500/10 rounded-lg transition-colors duration-300 hover:shadow-md"
+              >
+                <School className="h-5 w-5 text-amber-500 mb-2" />
                 <h3 className="font-medium">Education Paths</h3>
-              </div>
+              </motion.div>
             </div>
             <div className="flex justify-center">
-              <Button onClick={() => navigate('/mbti')} className="px-6">
+              <Button 
+                onClick={() => navigate('/mbti')} 
+                className="px-6 bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-600 hover:to-blue-700"
+              >
                 <Brain className="mr-2 h-4 w-4" />
                 Take the MBTI Assessment
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </TransitionLayout>
