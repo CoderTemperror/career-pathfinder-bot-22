@@ -75,7 +75,11 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2 transition-all duration-200 hover:border-blue-400"
+                className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2 transition-all duration-200 
+                  hover:border-blue-400 cursor-pointer hover:bg-secondary/30"
+                onClick={() => {
+                  window.location.href = `/chat?question=Tell me more about pursuing a career as a ${career} for someone with ${mbtiResult.type} personality type. What skills do I need, what education is required, and what's the job outlook?`;
+                }}
               >
                 <span>{career}</span>
               </motion.div>
