@@ -38,15 +38,13 @@ const AnswerOption = ({
   };
 
   // Base styles that don't have color effects - ensure text is visible in all themes
-  const baseStyles = isSelected 
-    ? 'bg-white dark:bg-gray-800 border-2 shadow-lg text-foreground' 
-    : 'bg-secondary/70 hover:shadow-md text-foreground';
+  const baseStyles = "bg-secondary/70 hover:shadow-md text-foreground";
   
-  // Selected state styling
+  // Only apply selected styles when the option is actually selected
   const selectedStyles = isSelected
     ? (color === 'blue' 
-        ? 'border-blue-500 ring-2 ring-blue-300 dark:ring-blue-500' 
-        : 'border-green-500 ring-2 ring-green-300 dark:ring-green-500')
+        ? 'bg-white dark:bg-gray-800 border-2 border-blue-500 ring-2 ring-blue-300 dark:ring-blue-500 shadow-lg' 
+        : 'bg-white dark:bg-gray-800 border-2 border-green-500 ring-2 ring-green-300 dark:ring-green-500 shadow-lg')
     : 'border border-primary/20';
   
   // Hover state styling (only for hover, not for selected state)
@@ -69,7 +67,8 @@ const AnswerOption = ({
         onClick={onClick}
         className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 ${
           baseStyles
-        } ${selectedStyles} ${hoverStyles}`}
+        } ${isSelected ? selectedStyles : 'border border-primary/20'} ${hoverStyles}`}
+        key={`${optionType}-${isSelected}`} // Add key to force re-render when selection changes
       >
         <div className="flex items-start gap-4">
           <motion.div 
