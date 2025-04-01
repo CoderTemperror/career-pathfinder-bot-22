@@ -2,7 +2,8 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { RotateCcw, ArrowRight, CheckCircle2, ExternalLink } from 'lucide-react';
+import { useState } from 'react';
 
 interface MBTIResultsProps {
   mbtiResult: {
@@ -14,6 +15,12 @@ interface MBTIResultsProps {
 }
 
 const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
+  const [selectedCareer, setSelectedCareer] = useState<string | null>(null);
+
+  const handleCareerClick = (career: string) => {
+    setSelectedCareer(career === selectedCareer ? null : career);
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -75,12 +82,45 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2 transition-all duration-200 hover:border-blue-400"
+                className={`bg-secondary/20 border rounded-md p-3 cursor-pointer flex justify-between items-center gap-2 transition-all duration-200 hover:border-blue-400 ${
+                  selectedCareer === career ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' : ''
+                }`}
+                onClick={() => handleCareerClick(career)}
               >
                 <span>{career}</span>
+                <ExternalLink className="h-4 w-4 text-blue-500" />
               </motion.div>
             ))}
           </div>
+          
+          {selectedCareer && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mt-6 bg-white dark:bg-gray-800 p-4 rounded-lg border border-blue-200 dark:border-blue-800"
+            >
+              <h4 className="font-medium text-lg text-blue-600 dark:text-blue-400 mb-2">{selectedCareer}</h4>
+              <p className="text-gray-600 dark:text-gray-300 mb-4">
+                Learn more about careers in {selectedCareer} and explore education pathways, job outlook, and skill requirements.
+              </p>
+              <div className="flex gap-3">
+                <Link to={`/chat?prompt=Tell me about ${encodeURIComponent(selectedCareer)} careers`}>
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                    Ask for Details
+                    <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                  </Button>
+                </Link>
+                <a href={`https://www.google.com/search?q=${encodeURIComponent(`${selectedCareer} career information`)}`} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" variant="outline">
+                    Search Online
+                    <ExternalLink className="h-3.5 w-3.5 ml-1" />
+                  </Button>
+                </a>
+              </div>
+            </motion.div>
+          )}
         </div>
       )}
     </motion.div>
