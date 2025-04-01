@@ -37,15 +37,15 @@ const AnswerOption = ({
     },
   };
 
-  const colorClasses = {
-    blue: {
-      selected: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg ring-2 ring-blue-300',
-      default: 'bg-secondary/70 hover:bg-blue-50 hover:text-blue-700 hover:shadow-md'
-    },
-    green: {
-      selected: 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg ring-2 ring-green-300',
-      default: 'bg-secondary/70 hover:bg-green-50 hover:text-green-700 hover:shadow-md'
+  // Changed the color selection logic to be more explicit about the selected state
+  const getColorClasses = (isSelected: boolean, color: 'blue' | 'green') => {
+    if (!isSelected) {
+      return 'bg-secondary/70 hover:bg-slate-100 hover:text-slate-800 hover:shadow-md';
     }
+    
+    return color === 'blue' 
+      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg ring-2 ring-blue-300'
+      : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg ring-2 ring-green-300';
   };
 
   return (
@@ -60,9 +60,7 @@ const AnswerOption = ({
       <button
         onClick={onClick}
         className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 ${
-          isSelected 
-            ? colorClasses[color].selected
-            : colorClasses[color].default
+          getColorClasses(isSelected, color)
         }`}
       >
         <div className="flex items-start gap-4">
