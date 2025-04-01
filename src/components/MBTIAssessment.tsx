@@ -1,12 +1,13 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { mbtiQuestions, calculateMBTIType, personalityDescriptions } from '@/utils/mbtiCalculator';
 import StorageService from '@/services/storage';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Lightbulb, Book, Briefcase, Heart } from 'lucide-react';
 
-// Import our new components
+// Import our components
 import ProgressIndicator from './mbti/ProgressIndicator';
 import QuestionNavigation from './mbti/QuestionNavigation';
 import QuestionTitle from './mbti/QuestionTitle';
@@ -18,7 +19,11 @@ const MBTIAssessment = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{[key: number]: 'A' | 'B'}>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
+  const [mbtiResult, setMbtiResult] = useState<{
+    type: string;
+    description: string;
+    careers: string[];
+  } | null>(null);
   const isMobile = useIsMobile();
   
   const currentQuestion = mbtiQuestions[currentQuestionIndex];
@@ -28,6 +33,12 @@ const MBTIAssessment = () => {
     const savedMBTIAnswers = StorageService.get('mbti_answers');
     if (savedMBTIAnswers) {
       setAnswers(savedMBTIAnswers);
+    }
+    
+    // Check if result already exists
+    const savedResult = StorageService.get('mbti_result');
+    if (savedResult) {
+      setMbtiResult(savedResult);
     }
   }, []);
   
@@ -84,31 +95,28 @@ const MBTIAssessment = () => {
     };
     
     // Save MBTI results to storage for later use
-    StorageService.set('mbti_result', {
+    const result = {
       type: mbtiType,
       description: personalityInfo.description,
       careers: personalityInfo.careers,
       timestamp: new Date().toISOString()
-    });
+    };
+    
+    StorageService.set('mbti_result', result);
     
     // Save MBTI type separately for persistent access from chat
     StorageService.saveMbtiType(mbtiType);
     
-    toast.success(`Your personality type is ${mbtiType}!`, {
-      description: personalityInfo.description,
-    });
+    setMbtiResult(result);
+    setIsSubmitting(false);
     
-    // Delay navigation to let the user see the toast
-    setTimeout(() => {
-      // Navigate to chat with the MBTI type as a parameter
-      navigate(`/chat?mbti=${mbtiType}`);
-      setIsSubmitting(false);
-    }, 2000);
+    toast.success(`Your personality type is ${mbtiType}!`);
   };
   
   const resetAssessment = () => {
     setAnswers({});
     setCurrentQuestionIndex(0);
+    setMbtiResult(null);
     StorageService.set('mbti_answers', {});
     // Also clear the MBTI result when assessment is reset
     StorageService.set('mbti_result', null);
@@ -118,6 +126,57 @@ const MBTIAssessment = () => {
       description: "All answers have been cleared."
     });
   };
+  
+  // If there's a result, show the result page
+  if (mbtiResult) {
+    return (
+      <div className="space-y-6 max-w-5xl mx-auto">
+        <Card className="shadow-md">
+          <CardHeader className="bg-primary/5 pb-4">
+            <CardTitle className="text-center text-2xl flex flex-col items-center">
+              <span className="bg-primary/10 p-3 rounded-full mb-3">
+                <Lightbulb className="h-6 w-6 text-primary" />
+              </span>
+              Your Personality Type: {mbtiResult.type}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            <p className="text-lg leading-relaxed">{mbtiResult.description}</p>
+            
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold flex items-center">
+                <Briefcase className="h-5 w-5 mr-2 text-primary" />
+                Recommended Careers
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {mbtiResult.careers.map((career, index) => (
+                  <div 
+                    key={index} 
+                    className="bg-secondary/20 p-3 rounded-lg border border-secondary/30 flex items-center"
+                  >
+                    <Book className="h-4 w-4 mr-2 text-primary/70" />
+                    {career}
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="pt-4 flex flex-col items-center">
+              <p className="text-muted-foreground text-center mb-4">
+                Want to take the assessment again?
+              </p>
+              <button 
+                onClick={resetAssessment}
+                className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full transition-colors"
+              >
+                Retake Assessment
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6 max-w-5xl mx-auto">

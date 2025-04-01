@@ -37,16 +37,24 @@ const AnswerOption = ({
     },
   };
 
-  // Changed the color selection logic to be more explicit about the selected state
-  const getColorClasses = (isSelected: boolean, color: 'blue' | 'green') => {
-    if (!isSelected) {
-      return 'bg-secondary/70 hover:bg-slate-100 hover:text-slate-800 hover:shadow-md';
-    }
-    
-    return color === 'blue' 
-      ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg ring-2 ring-blue-300'
-      : 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg ring-2 ring-green-300';
-  };
+  // Base styles that don't have color effects
+  const baseStyles = isSelected 
+    ? 'bg-white border-2 shadow-lg' 
+    : 'bg-secondary/70 hover:shadow-md';
+  
+  // Selected state styling
+  const selectedStyles = isSelected
+    ? (color === 'blue' 
+        ? 'border-blue-500 ring-2 ring-blue-300' 
+        : 'border-green-500 ring-2 ring-green-300')
+    : '';
+  
+  // Hover state styling (only shows on hover/touch)
+  const hoverStyles = !isSelected
+    ? (color === 'blue' 
+        ? 'hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 hover:shadow-blue-200/50' 
+        : 'hover:border-green-500 hover:bg-green-50 hover:text-green-700 hover:shadow-green-200/50')
+    : '';
 
   return (
     <motion.div
@@ -59,9 +67,9 @@ const AnswerOption = ({
     >
       <button
         onClick={onClick}
-        className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 ${
-          getColorClasses(isSelected, color)
-        }`}
+        className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 border ${
+          baseStyles
+        } ${selectedStyles} ${hoverStyles}`}
       >
         <div className="flex items-start gap-4">
           <motion.div 
@@ -71,7 +79,7 @@ const AnswerOption = ({
             } : {}}
             className={`flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center ${
               isSelected 
-                ? `bg-white text-${color === 'blue' ? 'blue' : 'green'}-500` 
+                ? `bg-${color === 'blue' ? 'blue' : 'green'}-100 text-${color === 'blue' ? 'blue' : 'green'}-500` 
                 : 'border border-primary/50'
             }`}
           >
