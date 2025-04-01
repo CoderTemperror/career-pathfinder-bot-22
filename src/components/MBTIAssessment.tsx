@@ -5,7 +5,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { mbtiQuestions, calculateMBTIType, personalityDescriptions } from '@/utils/mbtiCalculator';
 import StorageService from '@/services/storage';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Lightbulb, Book, Briefcase, Heart } from 'lucide-react';
+import { Lightbulb, Book, Briefcase, Heart, ChevronRight, RotateCcw, PersonStanding } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Import our components
 import ProgressIndicator from './mbti/ProgressIndicator';
@@ -14,6 +15,7 @@ import QuestionTitle from './mbti/QuestionTitle';
 import AnswerOption from './mbti/AnswerOption';
 import NavigationControls from './mbti/NavigationControls';
 import AutoSaveIndicator from './mbti/AutoSaveIndicator';
+import { motion } from 'framer-motion';
 
 const MBTIAssessment = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -127,57 +129,76 @@ const MBTIAssessment = () => {
     });
   };
   
-  // If there's a result, show the result page
+  // If there's a result, show the result in the context of the main page
   if (mbtiResult) {
     return (
-      <div className="space-y-6 max-w-5xl mx-auto">
-        <Card className="shadow-md">
-          <CardHeader className="bg-primary/5 pb-4">
-            <CardTitle className="text-center text-2xl flex flex-col items-center">
-              <span className="bg-primary/10 p-3 rounded-full mb-3">
-                <Lightbulb className="h-6 w-6 text-primary" />
-              </span>
-              Your Personality Type: {mbtiResult.type}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-6 space-y-6">
-            <p className="text-lg leading-relaxed text-foreground">{mbtiResult.description}</p>
-            
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold flex items-center">
-                <Briefcase className="h-5 w-5 mr-2 text-primary" />
-                Recommended Careers
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {mbtiResult.careers.map((career, index) => (
-                  <div 
-                    key={index} 
-                    className="bg-secondary/20 p-3 rounded-lg border border-secondary/30 flex items-center"
-                  >
-                    <Book className="h-4 w-4 mr-2 text-primary/70" />
-                    {career}
-                  </div>
-                ))}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-3xl mx-auto"
+      >
+        <div className={`bg-primary/10 border border-primary/20 rounded-lg p-6 ${isMobile ? 'mb-6' : 'mb-8'}`}>
+          <div className={`flex ${isMobile ? 'flex-col items-center text-center' : 'items-start'} gap-4`}>
+            <motion.div 
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ 
+                duration: 0.5,
+                type: "spring",
+                stiffness: 260,
+                damping: 20 
+              }}
+              className="bg-gradient-to-br from-green-400 to-emerald-500 p-3 rounded-full"
+            >
+              <Lightbulb className="h-6 w-6 text-white" />
+            </motion.div>
+            <div>
+              <h2 className="text-xl font-semibold mb-2">Your Assessment is Complete</h2>
+              <p className={`${isMobile ? 'text-lg' : ''} text-foreground mb-4`}>
+                Your personality type is <span className="font-bold text-blue-500">{mbtiResult.type}</span>
+              </p>
+              <p className="mb-4 text-foreground">{mbtiResult.description}</p>
+              
+              <div className={`flex ${isMobile ? 'flex-col w-full' : 'flex-row'} gap-3 mt-2`}>
+                <Button 
+                  variant="outline" 
+                  onClick={resetAssessment} 
+                  className={`hover:border-rose-400 hover:text-rose-500 transition-all duration-300 ${isMobile ? 'py-6' : ''}`}
+                >
+                  <RotateCcw className="mr-2 h-4 w-4" />
+                  Retake Test
+                </Button>
               </div>
             </div>
-            
-            <div className="pt-4 flex flex-col items-center">
-              <p className="text-muted-foreground text-center mb-4">
-                Want to take the assessment again?
-              </p>
-              <button 
-                onClick={resetAssessment}
-                className="px-6 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-full transition-colors"
-              >
-                Retake Assessment
-              </button>
+          </div>
+        </div>
+        
+        {mbtiResult.careers && mbtiResult.careers.length > 0 && (
+          <div className="bg-card border rounded-lg p-6">
+            <h3 className="text-lg font-semibold mb-4">Recommended Career Paths</h3>
+            <div className={`grid grid-cols-1 ${isMobile ? '' : 'md:grid-cols-2'} gap-3`}>
+              {mbtiResult.careers.map((career: string, index: number) => (
+                <motion.div 
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  whileHover={{ scale: 1.03, backgroundColor: 'rgba(59, 130, 246, 0.08)' }}
+                  className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2 transition-all duration-200 cursor-pointer hover:border-blue-400"
+                >
+                  <PersonStanding className="h-4 w-4 text-blue-500" />
+                  <span>{career}</span>
+                </motion.div>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        )}
+      </motion.div>
     );
   }
   
+  // Continue with the assessment flow
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       <ProgressIndicator 
