@@ -55,6 +55,12 @@ const MBTIPage = () => {
     setMbtiResult(null);
   };
   
+  const handleCareerClick = (career: string) => {
+    // Navigate to chat with a specific question about the selected career
+    const question = `Tell me more about a career as a ${career}`;
+    navigate(`/chat?question=${encodeURIComponent(question)}`);
+  };
+  
   return (
     <TransitionLayout>
       <Navbar />
@@ -127,7 +133,8 @@ const MBTIPage = () => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.4, delay: index * 0.1 }}
                       whileHover={{ scale: 1.03, backgroundColor: 'rgba(59, 130, 246, 0.08)' }}
-                      className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2 transition-all duration-200"
+                      className="bg-secondary/20 border rounded-md p-3 flex items-center gap-2 transition-all duration-200 cursor-pointer hover:border-blue-400"
+                      onClick={() => handleCareerClick(career)}
                     >
                       <PersonStanding className="h-4 w-4 text-blue-500" />
                       <span>{career}</span>
