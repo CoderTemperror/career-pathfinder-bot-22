@@ -51,9 +51,9 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
   }, [isEditing]);
 
   return (
-    <div className="flex flex-col items-end max-w-full">
+    <div className="flex flex-col items-end max-w-[85%] w-full ml-auto">
       {isEditing ? (
-        <div className="w-full max-w-md">
+        <div className="w-full">
           <Textarea
             ref={textareaRef}
             value={editedContent}
@@ -81,7 +81,7 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
         </div>
       ) : (
         <>
-          <div className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg rounded-tr-none shadow-sm max-w-[90%]">
+          <div className="chat-message-user">
             <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
           </div>
           <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-1">

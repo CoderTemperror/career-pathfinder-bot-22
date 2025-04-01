@@ -33,9 +33,9 @@ const MessageList = ({
             animate="animate"
             exit="exit"
             variants={chatMessageAnimation}
-            className={`mb-6 w-full flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+            className="mb-6 w-full flex"
           >
-            <div className={`max-w-[80%] group ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+            <div className={`w-full max-w-full group ${message.role === 'user' ? 'flex justify-end' : 'flex justify-start'}`}>
               {message.role === 'user' ? (
                 <UserMessage 
                   message={message}

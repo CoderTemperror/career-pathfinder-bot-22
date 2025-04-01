@@ -24,11 +24,11 @@
 
 /* Chat message bubble styles */
 .chat-message-user {
-  @apply bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg rounded-tr-none max-w-fit;
+  @apply bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg rounded-tr-none w-full;
 }
 
 .chat-message-assistant {
-  @apply bg-muted py-2 px-4 rounded-lg rounded-tl-none max-w-full text-left;
+  @apply bg-muted py-2 px-4 rounded-lg rounded-tl-none w-full text-left;
 }
 
 /* Prevent overflow content issues */
@@ -63,7 +63,7 @@
 }
 
 .message-content {
-  @apply max-w-[80%] break-words;
+  @apply w-full break-words;
 }
 
 /* Add subtle hover animation to buttons */
