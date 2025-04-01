@@ -12,7 +12,7 @@ interface AssistantMessageProps {
 
 const AssistantMessage = ({ message }: AssistantMessageProps) => {
   return (
-    <div className="flex gap-3 items-start w-full max-w-[85%]">
+    <div className="flex gap-3 items-start w-full">
       <Avatar className="w-8 h-8 mt-1 bg-neutral-200 dark:bg-neutral-700 text-foreground flex items-center justify-center flex-shrink-0">
         <Bot className="w-4 h-4" />
       </Avatar>

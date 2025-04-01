@@ -1,4 +1,5 @@
 
+
 /* Card hover effects */
 .hover-card {
   @apply transition-all duration-300 hover:shadow-md hover:-translate-y-1;
@@ -24,11 +25,11 @@
 
 /* Chat message bubble styles */
 .chat-message-user {
-  @apply bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg rounded-tr-none w-full;
+  @apply bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-2 px-4 rounded-lg rounded-tr-none inline-block max-w-full;
 }
 
 .chat-message-assistant {
-  @apply bg-muted py-2 px-4 rounded-lg rounded-tl-none w-full text-left;
+  @apply w-full text-left py-2;
 }
 
 /* Prevent overflow content issues */
@@ -96,3 +97,4 @@ button {
 .bg-gradient-vivid {
   @apply bg-gradient-to-r from-blue-500 to-indigo-600;
 }
+

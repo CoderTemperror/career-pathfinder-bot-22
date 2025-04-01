@@ -51,7 +51,7 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
   }, [isEditing]);
 
   return (
-    <div className="flex flex-col items-end max-w-[85%] w-full ml-auto">
+    <div className="flex flex-col items-end max-w-[85%] w-auto ml-auto">
       {isEditing ? (
         <div className="w-full">
           <Textarea
