@@ -57,8 +57,8 @@
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     
-    /* Custom color accents in dark mode */
-    --blue-accent: 214 100% 50%;
+    /* Custom color accents in dark mode - make them brighter */
+    --blue-accent: 214 100% 60%;
     --indigo-accent: 240 70% 70%;
     --green-accent: 160 84% 39%;
     --amber-accent: 30 100% 50%;
@@ -101,4 +101,17 @@
 /* Add smooth scrolling to the whole document */
 html {
   scroll-behavior: smooth;
+}
+
+/* Fix for white page issue when opening in new tab */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -103,10 +102,10 @@ const MBTIPage = () => {
                 </motion.div>
                 <div>
                   <h2 className="text-xl font-semibold mb-2">Your Assessment is Complete</h2>
-                  <p className={`${isMobile ? 'text-lg' : ''} text-muted-foreground mb-4`}>
+                  <p className={`${isMobile ? 'text-lg' : ''} text-foreground mb-4`}>
                     Your personality type is <span className="font-bold text-blue-500">{mbtiResult.type}</span>
                   </p>
-                  <p className="mb-4">{mbtiResult.description}</p>
+                  <p className="mb-4 text-foreground">{mbtiResult.description}</p>
                   
                   <div className={`flex ${isMobile ? 'flex-col w-full' : 'flex-row'} gap-3 mt-2`}>
                     <Button 

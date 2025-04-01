@@ -39,21 +39,21 @@ const AnswerOption = ({
 
   // Base styles that don't have color effects
   const baseStyles = isSelected 
-    ? 'bg-white border-2 shadow-lg' 
-    : 'bg-secondary/70 hover:shadow-md';
+    ? 'bg-white border-2 shadow-lg text-foreground' 
+    : 'bg-secondary/70 hover:shadow-md text-foreground';
   
   // Selected state styling
   const selectedStyles = isSelected
     ? (color === 'blue' 
         ? 'border-blue-500 ring-2 ring-blue-300' 
         : 'border-green-500 ring-2 ring-green-300')
-    : '';
+    : 'border border-primary/20';
   
-  // Hover state styling (only shows on hover/touch)
+  // Hover state styling (only for hover, not for selected state)
   const hoverStyles = !isSelected
     ? (color === 'blue' 
-        ? 'hover:border-blue-500 hover:bg-blue-50 hover:text-blue-700 hover:shadow-blue-200/50' 
-        : 'hover:border-green-500 hover:bg-green-50 hover:text-green-700 hover:shadow-green-200/50')
+        ? 'hover:border-blue-500 hover:shadow-blue-500/30 active:bg-blue-50 active:text-blue-700' 
+        : 'hover:border-green-500 hover:shadow-green-500/30 active:bg-green-50 active:text-green-700')
     : '';
 
   return (
@@ -67,7 +67,7 @@ const AnswerOption = ({
     >
       <button
         onClick={onClick}
-        className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 border ${
+        className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 ${
           baseStyles
         } ${selectedStyles} ${hoverStyles}`}
       >

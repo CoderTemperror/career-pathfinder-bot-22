@@ -141,7 +141,7 @@ const MBTIAssessment = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="pt-6 space-y-6">
-            <p className="text-lg leading-relaxed">{mbtiResult.description}</p>
+            <p className="text-lg leading-relaxed text-foreground">{mbtiResult.description}</p>
             
             <div className="space-y-4">
               <h3 className="text-xl font-semibold flex items-center">
