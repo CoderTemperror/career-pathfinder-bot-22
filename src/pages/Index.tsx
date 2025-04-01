@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import TransitionLayout from '@/components/TransitionLayout';
@@ -15,14 +14,6 @@ const Index = () => {
       <div className="min-h-screen pt-24 px-6 bg-gradient-to-b from-background to-background/95">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <motion.div 
-              initial={{ opacity: 0, y: -10 }} 
-              animate={{ opacity: 1, y: 0 }} 
-              transition={{ duration: 0.5 }}
-              className="mb-1"
-            >
-              <span className="text-sm text-amber-500 font-medium">SBH 2025 Junior</span>
-            </motion.div>
             <h1 className="text-4xl md:text-6xl font-display font-bold tracking-tight mb-8">
               <motion.span 
                 initial={{ opacity: 0 }} 
