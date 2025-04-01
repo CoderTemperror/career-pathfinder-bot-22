@@ -37,23 +37,23 @@ const AnswerOption = ({
     },
   };
 
-  // Base styles that don't have color effects
+  // Base styles that don't have color effects - ensure text is visible in all themes
   const baseStyles = isSelected 
-    ? 'bg-white border-2 shadow-lg text-foreground' 
+    ? 'bg-white dark:bg-gray-800 border-2 shadow-lg text-foreground' 
     : 'bg-secondary/70 hover:shadow-md text-foreground';
   
   // Selected state styling
   const selectedStyles = isSelected
     ? (color === 'blue' 
-        ? 'border-blue-500 ring-2 ring-blue-300' 
-        : 'border-green-500 ring-2 ring-green-300')
+        ? 'border-blue-500 ring-2 ring-blue-300 dark:ring-blue-500' 
+        : 'border-green-500 ring-2 ring-green-300 dark:ring-green-500')
     : 'border border-primary/20';
   
   // Hover state styling (only for hover, not for selected state)
   const hoverStyles = !isSelected
     ? (color === 'blue' 
-        ? 'hover:border-blue-500 hover:shadow-blue-500/30 active:bg-blue-50 active:text-blue-700' 
-        : 'hover:border-green-500 hover:shadow-green-500/30 active:bg-green-50 active:text-green-700')
+        ? 'hover:border-blue-500 hover:shadow-blue-500/30 active:bg-blue-50 active:text-blue-700 dark:hover:text-blue-300 dark:active:bg-blue-900/50' 
+        : 'hover:border-green-500 hover:shadow-green-500/30 active:bg-green-50 active:text-green-700 dark:hover:text-green-300 dark:active:bg-green-900/50')
     : '';
 
   return (
@@ -79,7 +79,7 @@ const AnswerOption = ({
             } : {}}
             className={`flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center ${
               isSelected 
-                ? `bg-${color === 'blue' ? 'blue' : 'green'}-100 text-${color === 'blue' ? 'blue' : 'green'}-500` 
+                ? `bg-${color === 'blue' ? 'blue' : 'green'}-100 dark:bg-${color === 'blue' ? 'blue' : 'green'}-900/50 text-${color === 'blue' ? 'blue' : 'green'}-500 dark:text-${color === 'blue' ? 'blue' : 'green'}-300` 
                 : 'border border-primary/50'
             }`}
           >
