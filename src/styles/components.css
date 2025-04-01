@@ -49,18 +49,21 @@
   @apply w-full max-w-5xl mx-auto px-4;
 }
 
-/* User message container styles */
+/* Message containers */
+.message-container {
+  @apply w-full flex mb-6;
+}
+
 .user-message-container {
-  @apply flex justify-end mb-6;
+  @apply justify-end;
 }
 
-.user-message {
-  @apply text-right;
-}
-
-/* Assistant message container styles */
 .assistant-message-container {
-  @apply flex justify-start mb-6;
+  @apply justify-start;
+}
+
+.message-content {
+  @apply max-w-[80%] break-words;
 }
 
 /* Add subtle hover animation to buttons */

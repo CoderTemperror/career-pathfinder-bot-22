@@ -33,17 +33,19 @@ const MessageList = ({
             animate="animate"
             exit="exit"
             variants={chatMessageAnimation}
-            className={`mb-6 ${message.role === 'user' ? 'flex justify-end' : 'flex justify-start'}`}
+            className={`mb-6 w-full flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            {message.role === 'user' ? (
-              <UserMessage 
-                message={message}
-                onEdit={onEditMessage}
-                onReuse={onReuseMessage}
-              />
-            ) : (
-              <AssistantMessage message={message} />
-            )}
+            <div className={`max-w-[80%] group ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
+              {message.role === 'user' ? (
+                <UserMessage 
+                  message={message}
+                  onEdit={onEditMessage}
+                  onReuse={onReuseMessage}
+                />
+              ) : (
+                <AssistantMessage message={message} />
+              )}
+            </div>
           </motion.div>
         ))}
       </AnimatePresence>

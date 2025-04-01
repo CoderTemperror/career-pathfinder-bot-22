@@ -51,9 +51,9 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
   }, [isEditing]);
 
   return (
-    <div className="user-message max-w-[80%] break-words group">
+    <div className="flex flex-col items-end max-w-full">
       {isEditing ? (
-        <div>
+        <div className="w-full max-w-md">
           <Textarea
             ref={textareaRef}
             value={editedContent}
@@ -80,8 +80,8 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
           </div>
         </div>
       ) : (
-        <div className="text-right">
-          <div className="inline-block bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg rounded-tr-none shadow-sm">
+        <>
+          <div className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg rounded-tr-none shadow-sm max-w-[90%]">
             <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
           </div>
           <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity mt-1">
@@ -106,7 +106,7 @@ const UserMessage = ({ message, onEdit, onReuse }: UserMessageProps) => {
               <span className="sr-only">Reuse message</span>
             </Button>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
