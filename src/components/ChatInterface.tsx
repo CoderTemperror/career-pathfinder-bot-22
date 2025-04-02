@@ -39,7 +39,7 @@ const ChatInterface = ({ className = "", initialQuestion, mbtiType }: ChatInterf
   } = useChatMessages({ 
     initialQuestion, 
     mbtiType: persistentMbtiType || undefined, 
-    resetOnRefresh: true 
+    resetOnRefresh: false  // Change this to false to persist chat history
   });
 
   // Only scroll to bottom when user sends a new message or when assistant replies

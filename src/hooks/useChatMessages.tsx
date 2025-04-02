@@ -83,7 +83,12 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
     
     const userMessage = createUserMessage(inputValue);
     
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => {
+      const newMessages = [...prev, userMessage];
+      storageService.saveChatHistory(newMessages);
+      return newMessages;
+    });
+    
     setInputValue("");
     setIsLoading(true);
     
@@ -92,10 +97,20 @@ export function useChatMessages({ initialQuestion, mbtiType, resetOnRefresh = fa
       const aiResponseText = await getAIResponse(inputValue, currentMbtiType || undefined);
       const aiMessage = createAssistantMessage(aiResponseText);
       
-      setMessages(prev => [...prev, aiMessage]);
+      setMessages(prev => {
+        const newMessages = [...prev, aiMessage];
+        storageService.saveChatHistory(newMessages);
+        return newMessages;
+      });
     } catch (error) {
       console.error("Error getting AI response:", error);
-      setMessages(prev => [...prev, createErrorMessage()]);
+      
+      setMessages(prev => {
+        const newMessages = [...prev, createErrorMessage()];
+        storageService.saveChatHistory(newMessages);
+        return newMessages;
+      });
+      
       showResponseErrorToast();
     } finally {
       setIsLoading(false);
