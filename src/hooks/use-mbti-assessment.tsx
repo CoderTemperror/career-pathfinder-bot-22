@@ -2,7 +2,11 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import StorageService from '@/services/storage';
-import { mbtiQuestions, calculateMBTIType, personalityDescriptions } from '@/utils/mbtiCalculator';
+import { 
+  mbtiQuestions, 
+  calculateMBTIType, 
+  personalityDescriptions 
+} from '@/utils/mbti';
 
 export interface MBTIAnswer {
   [key: number]: 'A' | 'B';
