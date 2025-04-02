@@ -1,6 +1,7 @@
 
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 interface AnswerOptionProps {
   optionType: 'A' | 'B';
@@ -17,6 +18,18 @@ const AnswerOption = ({
   onClick,
   color
 }: AnswerOptionProps) => {
+  // Track if this option has ever been selected to prevent styling issues
+  const [hasBeenSelected, setHasBeenSelected] = useState(false);
+  
+  // Reset the internal state when isSelected changes (when moving between questions)
+  useEffect(() => {
+    if (isSelected) {
+      setHasBeenSelected(true);
+    } else {
+      setHasBeenSelected(false);
+    }
+  }, [isSelected]);
+
   const fadeVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { 
@@ -54,6 +67,11 @@ const AnswerOption = ({
         : 'hover:border-green-500 hover:shadow-green-500/30 active:bg-green-50 active:text-green-700 dark:hover:text-green-300 dark:active:bg-green-900/50')
     : '';
 
+  // Custom click handler to force style reset when needed
+  const handleOptionClick = () => {
+    onClick();
+  };
+
   return (
     <motion.div
       initial="hidden"
@@ -64,11 +82,11 @@ const AnswerOption = ({
       whileTap={{ scale: 0.98 }}
     >
       <button
-        onClick={onClick}
+        onClick={handleOptionClick}
         className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 ${
           baseStyles
         } ${isSelected ? selectedStyles : 'border border-primary/20'} ${hoverStyles}`}
-        key={`${optionType}-${isSelected}`} // Add key to force re-render when selection changes
+        key={`${optionType}-${isSelected}-${currentQuestion?.id || ''}`} // Include question ID in the key
       >
         <div className="flex items-start gap-4">
           <motion.div 

@@ -65,6 +65,7 @@ const MBTIQuestionInterface = ({
       {/* Side-by-side choice boxes */}
       <div className={`grid grid-cols-1 ${isMobile ? "gap-4" : "md:grid-cols-2 gap-6"} mb-8`}>
         <AnswerOption 
+          key={`optionA-${currentQuestion.id}`}
           optionType="A"
           optionText={currentQuestion.optionA}
           isSelected={answers[currentQuestion.id] === 'A'}
@@ -73,6 +74,7 @@ const MBTIQuestionInterface = ({
         />
         
         <AnswerOption 
+          key={`optionB-${currentQuestion.id}`}
           optionType="B"
           optionText={currentQuestion.optionB}
           isSelected={answers[currentQuestion.id] === 'B'}
