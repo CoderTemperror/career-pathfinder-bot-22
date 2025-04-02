@@ -1,9 +1,10 @@
-
 type MBTIQuestion = {
   id: number;
   dimension: 'EI' | 'SN' | 'TF' | 'JP';
-  optionA: string; // Maps to the first letter (E, S, T, J)
-  optionB: string; // Maps to the second letter (I, N, F, P)
+  optionA: string;
+  optionB: string;
+  directionA: 'E' | 'S' | 'T' | 'J';
+  directionB: 'I' | 'N' | 'F' | 'P';
 };
 
 type MBTIAnswer = {
@@ -14,143 +15,172 @@ type MBTIAnswer = {
 export const mbtiQuestions: MBTIQuestion[] = [
   {
     id: 1,
-    dimension: 'SN',
-    optionA: "I remember past events vividly and assign personal meanings to information I gather.",
-    optionB: "I take information at face value and focus on observing things as they are through my senses.",
+    dimension: 'EI',
+    optionA: "I feel energized after spending time with a group of people.",
+    optionB: "I feel drained after spending time with a group of people and need alone time to recharge.",
+    directionA: 'E',
+    directionB: 'I'
   },
   {
     id: 2,
-    dimension: 'SN',
-    optionA: "I naturally think of multiple possibilities and alternatives when predicting outcomes.",
-    optionB: "I focus on the most likely and probable outcome when making predictions.",
+    dimension: 'EI',
+    optionA: "I prefer to work out ideas with others rather than thinking through them alone.",
+    optionB: "I prefer to think through ideas thoroughly before sharing them with others.",
+    directionA: 'E',
+    directionB: 'I'
   },
   {
     id: 3,
-    dimension: 'TF',
-    optionA: "I prioritize harmony and meeting others' needs, often keeping my opinions to myself to maintain peace.",
-    optionB: "I prioritize authenticity and my values, even if it means disrupting harmony to express them.",
+    dimension: 'EI',
+    optionA: "I tend to speak first and think later.",
+    optionB: "I tend to think first and speak later.",
+    directionA: 'E',
+    directionB: 'I'
   },
   {
     id: 4,
-    dimension: 'TF',
-    optionA: "I trust external data and proof. If something isn't backed by evidence, I may dismiss it.",
-    optionB: "I analyze things myself and form my own conclusions, trusting ideas that make sense to me regardless of proof.",
+    dimension: 'EI',
+    optionA: "I have a wide circle of friends and acquaintances.",
+    optionB: "I have a small circle of close friends.",
+    directionA: 'E',
+    directionB: 'I'
   },
   {
     id: 5,
-    dimension: 'SN',
-    optionA: "When hiking, I'm focused on my surroundings - observing trees, plants, colors, and textures.",
-    optionB: "When hiking, I'm often caught in my thoughts, walking on autopilot while thinking about various topics.",
+    dimension: 'EI',
+    optionA: "I prefer environments with lots of activity and interaction.",
+    optionB: "I prefer quiet environments where I can focus without interruption.",
+    directionA: 'E',
+    directionB: 'I'
   },
   {
     id: 6,
     dimension: 'SN',
-    optionA: "I enjoy researching topics I'm interested in, regardless of whether it benefits me practically.",
-    optionB: "I prefer not to research subjects deeply unless I can see a practical use or end result.",
+    optionA: "I focus on the concrete reality and what I can directly observe.",
+    optionB: "I focus on patterns, possibilities, and the meaning behind information.",
+    directionA: 'S',
+    directionB: 'N'
   },
   {
     id: 7,
-    dimension: 'TF',
-    optionA: "I prioritize efficiency, logic, and objective facts over feelings and social harmony.",
-    optionB: "I prioritize values, ethics, and others' feelings over efficiency and objective logic.",
+    dimension: 'SN',
+    optionA: "I trust experience and what has worked in the past.",
+    optionB: "I trust inspiration and theoretical insights for future possibilities.",
+    directionA: 'S',
+    directionB: 'N'
   },
   {
     id: 8,
-    dimension: 'EI',
-    optionA: "I'm more focused on my inner world and feel energized when thinking and planning by myself.",
-    optionB: "I'm more focused on the external world and feel energized through action and interacting with others.",
+    dimension: 'SN',
+    optionA: "I prefer detailed, step-by-step instructions.",
+    optionB: "I prefer general guidelines that allow for creative interpretation.",
+    directionA: 'S',
+    directionB: 'N'
   },
   {
     id: 9,
     dimension: 'SN',
-    optionA: "I often get lost in thoughts and may miss things in my physical surroundings or feel awkward in my body.",
-    optionB: "I easily focus on my surroundings, have good reflexes, and enjoy physical activities.",
+    optionA: "When reading, I focus on the specific facts and details presented.",
+    optionB: "When reading, I look for the overall meaning and connections to other concepts.",
+    directionA: 'S',
+    directionB: 'N'
   },
   {
     id: 10,
-    dimension: 'JP',
-    optionA: "I often have sudden realizations or 'epiphanies' that seem to come from nowhere with solutions or predictions.",
-    optionB: "I reach answers through conscious effort, by exploring possibilities or reviewing past information.",
+    dimension: 'SN',
+    optionA: "I'm more interested in practical applications than theoretical concepts.",
+    optionB: "I'm more interested in exploring abstract ideas and theoretical concepts.",
+    directionA: 'S',
+    directionB: 'N'
   },
   {
     id: 11,
-    dimension: 'JP',
-    optionA: "I tend to act quickly without overthinking, saying things as soon as they come to mind.",
-    optionB: "I think things through thoroughly before acting, sometimes missing opportunities to speak up.",
+    dimension: 'TF',
+    optionA: "When making decisions, I prioritize logic and objective analysis.",
+    optionB: "When making decisions, I prioritize values and how people will be affected.",
+    directionA: 'T',
+    directionB: 'F'
   },
   {
     id: 12,
-    dimension: 'EI',
-    optionA: "I prefer working in a quiet environment where I can focus deeply without interruptions.",
-    optionB: "I enjoy working in vibrant environments with lots of activity and opportunities to interact.",
+    dimension: 'TF',
+    optionA: "I tend to notice logical inconsistencies in what others say or do.",
+    optionB: "I tend to notice when someone's feelings might be hurt in a conversation.",
+    directionA: 'T',
+    directionB: 'F'
   },
   {
     id: 13,
-    dimension: 'JP',
-    optionA: "I like to plan my day in advance and prefer to stick to that plan.",
-    optionB: "I prefer to be spontaneous and adapt to circumstances as they arise.",
+    dimension: 'TF',
+    optionA: "I prefer giving honest feedback even if it might upset someone.",
+    optionB: "I prefer being tactful over being brutally honest if it prevents hurt feelings.",
+    directionA: 'T',
+    directionB: 'F'
   },
   {
     id: 14,
     dimension: 'TF',
-    optionA: "When making decisions, I consider people's feelings and work to create harmony.",
-    optionB: "When making decisions, I focus on what makes logical sense regardless of how others feel.",
+    optionA: "I tend to analyze problems objectively, without considering personal feelings.",
+    optionB: "I consider how a decision will impact the harmony and well-being of everyone involved.",
+    directionA: 'T',
+    directionB: 'F'
   },
   {
     id: 15,
-    dimension: 'SN',
-    optionA: "I'm more curious about abstract ideas and theoretical concepts.",
-    optionB: "I'm more interested in facts, details, and practical applications.",
+    dimension: 'TF',
+    optionA: "I value truth and fairness over tact and harmony.",
+    optionB: "I value harmony and compassion over objective truth.",
+    directionA: 'T',
+    directionB: 'F'
   },
   {
     id: 16,
-    dimension: 'EI',
-    optionA: "After a busy day, I recharge by spending time alone or with a close friend.",
-    optionB: "After a busy day, I recharge by meeting friends or attending social events.",
+    dimension: 'JP',
+    optionA: "I prefer having a clear schedule and sticking to it.",
+    optionB: "I prefer keeping my options open and deciding things as they come.",
+    directionA: 'J',
+    directionB: 'P'
   },
   {
     id: 17,
     dimension: 'JP',
-    optionA: "I prefer clear expectations and deadlines for projects I'm working on.",
-    optionB: "I prefer open-ended projects where I can adjust the process as I go.",
+    optionA: "I find it satisfying to complete projects and make final decisions.",
+    optionB: "I enjoy the process of exploring possibilities more than reaching conclusions.",
+    directionA: 'J',
+    directionB: 'P'
   },
   {
     id: 18,
-    dimension: 'TF',
-    optionA: "I typically make decisions based on how I feel about the situation and the people involved.",
-    optionB: "I typically make decisions by analyzing facts and considering cause-and-effect relationships.",
+    dimension: 'JP',
+    optionA: "I prefer environments that are organized and structured.",
+    optionB: "I prefer environments that are flexible and spontaneous.",
+    directionA: 'J',
+    directionB: 'P'
   },
   {
     id: 19,
-    dimension: 'SN',
-    optionA: "I prefer thinking about real things that can be verified through my senses.",
-    optionB: "I prefer thinking about possibilities and what could be rather than what is.",
+    dimension: 'JP',
+    optionA: "I like to plan activities well in advance.",
+    optionB: "I like to be spontaneous and go with the flow.",
+    directionA: 'J',
+    directionB: 'P'
   },
   {
     id: 20,
-    dimension: 'EI',
-    optionA: "I tend to think out loud and talk through problems with others to solve them.",
-    optionB: "I prefer to think through problems in my head before sharing my thoughts.",
-  },
+    dimension: 'JP',
+    optionA: "I feel stressed when deadlines or plans change unexpectedly.",
+    optionB: "I easily adapt to changing circumstances and new information.",
+    directionA: 'J',
+    directionB: 'P'
+  }
 ];
 
-type DimensionCount = {
-  E: number;
-  I: number;
-  S: number;
-  N: number;
-  T: number;
-  F: number;
-  J: number;
-  P: number;
-};
-
 export function calculateMBTIType(answers: MBTIAnswer[]): string {
-  const counts: DimensionCount = {
-    E: 0, I: 0,
-    S: 0, N: 0,
-    T: 0, F: 0,
-    J: 0, P: 0
+  const scores = {
+    EI: 0,
+    SN: 0,
+    TF: 0,
+    JP: 0
   };
 
   answers.forEach(answer => {
@@ -160,25 +190,26 @@ export function calculateMBTIType(answers: MBTIAnswer[]): string {
     const { dimension } = question;
     
     if (answer.answer === 'A') {
-      // First letter of dimension
-      if (dimension === 'EI') counts.E += 1;
-      if (dimension === 'SN') counts.N += 1;
-      if (dimension === 'TF') counts.T += 1;
-      if (dimension === 'JP') counts.J += 1;
+      switch (question.directionA) {
+        case 'E': scores.EI += 1; break;
+        case 'S': scores.SN += 1; break;
+        case 'T': scores.TF += 1; break;
+        case 'J': scores.JP += 1; break;
+      }
     } else {
-      // Second letter of dimension
-      if (dimension === 'EI') counts.I += 1;
-      if (dimension === 'SN') counts.S += 1;
-      if (dimension === 'TF') counts.F += 1;
-      if (dimension === 'JP') counts.P += 1;
+      switch (question.directionB) {
+        case 'I': scores.EI -= 1; break;
+        case 'N': scores.SN -= 1; break;
+        case 'F': scores.TF -= 1; break;
+        case 'P': scores.JP -= 1; break;
+      }
     }
   });
 
-  // Calculate each dimension based on which has more counts
-  const E_or_I = counts.E >= counts.I ? 'E' : 'I';
-  const S_or_N = counts.S >= counts.N ? 'S' : 'N';
-  const T_or_F = counts.T >= counts.F ? 'T' : 'F';
-  const J_or_P = counts.J >= counts.P ? 'J' : 'P';
+  const E_or_I = scores.EI >= 0 ? 'E' : 'I';
+  const S_or_N = scores.SN >= 0 ? 'S' : 'N';
+  const T_or_F = scores.TF >= 0 ? 'T' : 'F';
+  const J_or_P = scores.JP >= 0 ? 'J' : 'P';
 
   return `${E_or_I}${S_or_N}${T_or_F}${J_or_P}`;
 }
@@ -259,13 +290,11 @@ export function getSuggestedPrompts(mbtiType: string): string[] {
     `How can I balance my ${mbtiType} strengths and weaknesses in my career?`,
   ];
   
-  // Get personality-specific careers from our database
   const personalityInfo = personalityDescriptions[mbtiType] || { careers: [] };
   
-  // Add career-specific prompts based on MBTI type
   const careerPrompts = personalityInfo.careers.map(career => 
     `Tell me more about a career as a ${career}`
-  ).slice(0, 3); // Take up to 3 career-specific prompts
+  ).slice(0, 3);
   
   return [...generalPrompts, ...careerPrompts];
 }
