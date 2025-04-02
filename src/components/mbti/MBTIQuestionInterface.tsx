@@ -71,6 +71,7 @@ const MBTIQuestionInterface = ({
           isSelected={answers[currentQuestion.id] === 'A'}
           onClick={() => onAnswer('A')}
           color="blue"
+          questionId={currentQuestion.id} // Pass the questionId
         />
         
         <AnswerOption 
@@ -80,6 +81,7 @@ const MBTIQuestionInterface = ({
           isSelected={answers[currentQuestion.id] === 'B'}
           onClick={() => onAnswer('B')}
           color="green"
+          questionId={currentQuestion.id} // Pass the questionId
         />
       </div>
       

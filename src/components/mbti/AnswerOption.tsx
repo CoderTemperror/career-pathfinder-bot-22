@@ -9,6 +9,7 @@ interface AnswerOptionProps {
   isSelected: boolean;
   onClick: () => void;
   color: 'blue' | 'green';
+  questionId: number; // Add the questionId prop
 }
 
 const AnswerOption = ({
@@ -16,7 +17,8 @@ const AnswerOption = ({
   optionText,
   isSelected,
   onClick,
-  color
+  color,
+  questionId // Extract from props
 }: AnswerOptionProps) => {
   // Track if this option has ever been selected to prevent styling issues
   const [hasBeenSelected, setHasBeenSelected] = useState(false);
@@ -86,7 +88,7 @@ const AnswerOption = ({
         className={`w-full h-full min-h-[150px] p-6 md:p-8 rounded-xl text-left flex flex-col justify-center transition-all duration-300 ${
           baseStyles
         } ${isSelected ? selectedStyles : 'border border-primary/20'} ${hoverStyles}`}
-        key={`${optionType}-${isSelected}-${currentQuestion?.id || ''}`} // Include question ID in the key
+        key={`${optionType}-${isSelected}-${questionId}`} // Use questionId from props
       >
         <div className="flex items-start gap-4">
           <motion.div 
