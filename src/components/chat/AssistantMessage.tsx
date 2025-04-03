@@ -17,7 +17,7 @@ const AssistantMessage = ({ message }: AssistantMessageProps) => {
         <Bot className="w-4 h-4" />
       </Avatar>
       
-      <div className="chat-message-assistant">
+      <div className="chat-message-assistant prose prose-sm dark:prose-invert">
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           components={{
