@@ -1,71 +1,132 @@
 
-import { motion } from "framer-motion";
-import { Star } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { getRatingText } from "./utils";
-
-interface ReviewItem {
-  rating: number;
-  text: string;
-}
+import { useState } from 'react';
+import { format } from 'date-fns';
+import { Star, MoreHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Review } from '@/services/reviewService';
 
 interface PreviousReviewsProps {
-  reviews: ReviewItem[];
+  reviews: Review[];
 }
 
 const PreviousReviews = ({ reviews }: PreviousReviewsProps) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const reviewsPerPage = 3;
+  
+  const displayedReviews = reviews.slice(
+    currentPage * reviewsPerPage, 
+    (currentPage + 1) * reviewsPerPage
+  );
+  
+  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  
+  const handlePrevPage = () => {
+    setCurrentPage(prev => Math.max(0, prev - 1));
+  };
+  
+  const handleNextPage = () => {
+    setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
+  };
+  
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+  
+  // If we have no reviews, show a placeholder
   if (reviews.length === 0) {
-    return null;
+    return (
+      <Card className="shadow-md h-full">
+        <CardHeader>
+          <CardTitle className="text-xl">Recent Feedback</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="text-muted-foreground text-center py-8">
+              No reviews yet. Be the first to leave feedback!
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   }
-
+  
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
-      className="max-w-3xl mx-auto"
-    >
-      <h3 className="text-xl font-medium mb-4">Previous Feedback</h3>
-      <div className="space-y-4">
-        {reviews.map((item, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card className="bg-muted/40 hover:bg-muted/60 transition-colors duration-200">
-              <CardContent className="pt-6">
-                <div className="flex items-center mb-2">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <motion.div 
-                      key={i} 
-                      className="w-5 h-5 mr-1"
-                      initial={{ rotate: 0 }}
-                      animate={i < item.rating ? { 
-                        rotate: [0, 15, 0],
-                        transition: { 
-                          delay: i * 0.1,
-                          duration: 0.5,
-                          ease: "easeInOut"
-                        }
-                      } : {}}
-                    >
-                      <Star 
-                        className={`w-full h-full ${i < item.rating ? "text-yellow-400" : "text-muted-foreground/20"}`}
-                        fill={i < item.rating ? "currentColor" : "none"}
-                      />
-                    </motion.div>
-                  ))}
-                  <span className="ml-2 text-sm font-medium">{getRatingText(item.rating)}</span>
+    <Card className="shadow-md h-full">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-xl">Recent Feedback</CardTitle>
+        {totalPages > 1 && (
+          <div className="flex items-center gap-1">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handlePrevPage}
+              disabled={currentPage === 0}
+              className="h-8 w-8"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              {currentPage + 1}/{totalPages}
+            </span>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={handleNextPage}
+              disabled={currentPage >= totalPages - 1}
+              className="h-8 w-8"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {displayedReviews.map((review) => (
+            <div key={review.id} className="border rounded-lg p-4">
+              <div className="flex justify-between items-start mb-3">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarFallback>
+                      {getInitials(review.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h4 className="font-medium">{review.name}</h4>
+                    <p className="text-xs text-muted-foreground">
+                      {format(new Date(review.date), 'MMM d, yyyy')}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-sm">{item.text}</p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-    </motion.div>
+                
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      className={`h-4 w-4 ${
+                        i < review.rating ? 'text-amber-400 fill-amber-400' : 'text-muted-foreground'
+                      }`} 
+                    />
+                  ))}
+                </div>
+              </div>
+              
+              <p className="text-sm text-muted-foreground line-clamp-3">
+                {review.feedback}
+              </p>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

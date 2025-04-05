@@ -1,137 +1,164 @@
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Send, BadgeCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import RatingEmoji from "./RatingEmoji";
-import { getRatingText } from "./utils";
+import { useState } from 'react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
+import RatingEmoji from './RatingEmoji';
+import { Review } from '@/services/reviewService';
+
+// Validation schema for the form
+const formSchema = z.object({
+  name: z.string().min(2, { message: 'Name must be at least 2 characters' }).max(50),
+  email: z.string().email({ message: 'Please enter a valid email address' }),
+  rating: z.number().min(1, { message: 'Please select a rating' }).max(5),
+  feedback: z.string().min(10, { message: 'Feedback must be at least 10 characters' }).max(500),
+  source: z.string().optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
 
 interface ReviewFormProps {
-  onReviewSubmit: (review: { rating: number; text: string }) => void;
+  onSubmit: (data: Omit<Review, 'id' | 'date'>) => void;
+  isSubmitting: boolean;
 }
 
-const ReviewForm = ({ onReviewSubmit }: ReviewFormProps) => {
-  const [rating, setRating] = useState<number>(0);
-  const [review, setReview] = useState<string>("");
+const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
   const { toast } = useToast();
+  const [showSuccessState, setShowSuccessState] = useState(false);
+  
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      rating: 0,
+      feedback: '',
+      source: 'Website Review Form',
+    },
+  });
 
-  const handleRatingSelect = (value: number) => {
-    // If clicking the same rating twice, clear rating
-    setRating(prevRating => prevRating === value ? 0 : value);
-  };
-
-  const handleSubmitReview = () => {
-    if (rating === 0) {
-      toast({
-        title: "Rating required",
-        description: "Please select a rating before submitting your review.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    onReviewSubmit({ rating, text: review });
+  const handleSubmit = (data: FormValues) => {
+    onSubmit(data);
     
-    setRating(0);
-    setReview("");
+    // Show success state
+    setShowSuccessState(true);
     
+    // Show toast
     toast({
       title: "Thank you for your feedback!",
       description: "Your review has been submitted successfully.",
     });
+    
+    // Reset form after a delay
+    setTimeout(() => {
+      form.reset();
+      setShowSuccessState(false);
+    }, 3000);
   };
 
   return (
-    <div className="mb-10">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-2xl font-semibold text-center mb-8 flex items-center justify-center"
-      >
-        <BadgeCheck className="w-6 h-6 mr-2 text-blue-500" />
-        Judge's Review
-      </motion.h2>
-
-      <Card className="max-w-3xl mx-auto shadow-lg hover:shadow-xl transition-shadow duration-300">
-        <CardHeader>
-          <CardTitle>Share Your Feedback</CardTitle>
-          <CardDescription>
-            Help us improve by sharing your experience with Career Compass
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-3">
-              How would you rate your experience?
-            </label>
-            <motion.div 
-              className="flex justify-center gap-3 mb-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
-            >
-              {[1, 2, 3, 4, 5].map((value) => (
-                <RatingEmoji
-                  key={value}
-                  value={value}
-                  currentRating={rating}
-                  onSelect={handleRatingSelect}
-                />
-              ))}
-            </motion.div>
-            <motion.p 
-              className="text-center text-sm font-medium mt-2 min-h-[20px]"
-              animate={{ 
-                scale: rating > 0 ? [1, 1.1, 1] : 1,
-                transition: { duration: 0.3 }
-              }}
-            >
-              {getRatingText(rating)}
-            </motion.p>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <label htmlFor="review" className="block text-sm font-medium mb-2">
-              What did you think of our project?
-            </label>
-            <Textarea
-              id="review"
-              placeholder="Share your feedback, suggestions, or what you liked about the project..."
-              rows={5}
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
-              className="w-full resize-none focus:ring-2 focus:ring-blue-300 transition-all duration-200"
+    <>
+      {showSuccessState ? (
+        <div className="flex flex-col items-center justify-center py-8">
+          <div className="text-5xl mb-4">🎉</div>
+          <h3 className="text-xl font-bold mb-2">Thank You!</h3>
+          <p className="text-center text-muted-foreground">
+            Your feedback has been submitted and will help us improve.
+          </p>
+        </div>
+      ) : (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem className="space-y-4">
+                  <FormLabel className="text-base">How would you rate your experience?</FormLabel>
+                  <FormControl>
+                    <RatingEmoji value={field.value} onChange={field.onChange} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </motion.div>
-        </CardContent>
-        <CardFooter className="flex justify-end">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            
+            <div className="grid gap-4 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your email" type="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            <FormField
+              control={form.control}
+              name="feedback"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Your Feedback</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      placeholder="Tell us about your experience..." 
+                      className="min-h-[120px]" 
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="source"
+              render={({ field }) => (
+                <FormItem className="hidden">
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            
             <Button 
-              onClick={handleSubmitReview}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              type="submit" 
+              className="w-full"
+              disabled={isSubmitting}
             >
-              <Send className="w-4 h-4 mr-2" />
-              Submit Review
+              {isSubmitting ? "Submitting..." : "Submit Feedback"}
             </Button>
-          </motion.div>
-        </CardFooter>
-      </Card>
-    </div>
+          </form>
+        </Form>
+      )}
+    </>
   );
 };
 

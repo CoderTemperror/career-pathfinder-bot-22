@@ -1,55 +1,78 @@
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Award } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import TransitionLayout from "@/components/TransitionLayout";
-import TeamSection from "@/components/reviews/TeamSection";
-import ReviewForm from "@/components/reviews/ReviewForm";
-import PreviousReviews from "@/components/reviews/PreviousReviews";
-import { saveReviews, loadReviews } from "@/components/reviews/utils";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Card, CardContent } from '@/components/ui/card';
+import Navbar from '@/components/Navbar';
+import TransitionLayout from '@/components/TransitionLayout';
+import ReviewForm from '@/components/reviews/ReviewForm';
+import PreviousReviews from '@/components/reviews/PreviousReviews';
+import TeamSection from '@/components/reviews/TeamSection';
+import reviewService, { Review } from '@/services/reviewService';
+import { fadeInUp } from '@/utils/animations';
 
 const Reviews = () => {
-  const [savedReviews, setSavedReviews] = useState<Array<{ rating: number; text: string }>>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    setSavedReviews(loadReviews());
+    // Load existing reviews on mount
+    const storedReviews = reviewService.getAllReviews();
+    setReviews(storedReviews);
   }, []);
 
-  const handleSubmitReview = (newReview: { rating: number; text: string }) => {
-    const updatedReviews = [...savedReviews, newReview];
-    saveReviews(updatedReviews);
-    setSavedReviews(updatedReviews);
+  const handleSubmitReview = async (reviewData: Omit<Review, 'id' | 'date'>) => {
+    setIsSubmitting(true);
+    try {
+      // Save the review and get updated list
+      const updatedReviews = await reviewService.saveReview(reviewData);
+      setReviews(updatedReviews);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <TransitionLayout>
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen bg-gradient-to-b from-background to-background/90">
         <Navbar />
         
-        <main className="flex-1 container py-16 px-4 mt-14">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="max-w-5xl mx-auto"
-          >
-            <div className="text-center mb-16">
-              <h1 className="text-3xl font-bold mb-4">Smart Bengal Hackathon Junior 2025</h1>
-              <div className="flex items-center justify-center mb-6">
-                <Award className="w-6 h-6 text-amber-500 mr-2" />
-                <h2 className="text-xl font-semibold">Team Credits & Feedback</h2>
+        <main className="container py-20 px-4 min-h-screen">
+          <div className="pt-10 max-w-5xl mx-auto">
+            <motion.h1 
+              className="text-3xl md:text-4xl font-bold text-center mb-2"
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+            >
+              Your Feedback Matters
+            </motion.h1>
+            
+            <motion.p 
+              className="text-center text-muted-foreground mb-12"
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              custom={1}
+            >
+              Help us improve Career Compass with your valuable insights
+            </motion.p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-16">
+              <div className="md:col-span-3">
+                <Card className="shadow-md">
+                  <CardContent className="pt-6">
+                    <ReviewForm onSubmit={handleSubmitReview} isSubmitting={isSubmitting} />
+                  </CardContent>
+                </Card>
               </div>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Career Compass was developed to help teenagers make informed career decisions
-                by providing personalized guidance, assessments, and expert advice tailored to their interests and strengths.
-              </p>
+              
+              <div className="md:col-span-2">
+                <PreviousReviews reviews={reviews} />
+              </div>
             </div>
-
+            
             <TeamSection />
-            <ReviewForm onReviewSubmit={handleSubmitReview} />
-            <PreviousReviews reviews={savedReviews} />
-          </motion.div>
+          </div>
         </main>
       </div>
     </TransitionLayout>
