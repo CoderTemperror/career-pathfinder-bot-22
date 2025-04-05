@@ -1,146 +1,245 @@
 
 import { MBTIQuestion } from './types';
 
-// New updated MBTI questions based on user input
 export const mbtiQuestions: MBTIQuestion[] = [
   {
     id: 1,
-    text: "How do you prefer to start your workday?",
-    optionA: "With a to-do list and clear plan",
-    optionB: "By diving into whatever feels most urgent or interesting",
-    dimension: "J-P" // Judging vs Perceiving
+    question: "Which describes you better?",
+    optionA: {
+      text: "I plan my day ahead",
+      type: "J"
+    },
+    optionB: {
+      text: "I go with the flow",
+      type: "P"
+    }
   },
   {
     id: 2,
-    text: "Which excites you more?",
-    optionA: "Solving a challenging technical problem",
-    optionB: "Brainstorming creative ideas for a project",
-    dimension: "S-N" // Sensing vs Intuition
+    question: "Which describes you better?",
+    optionA: {
+      text: "I love solving problems",
+      type: "T"
+    },
+    optionB: {
+      text: "I love creating ideas",
+      type: "N"
+    }
   },
   {
     id: 3,
-    text: "In a team setting, you prefer to:",
-    optionA: "Take charge and organize tasks",
-    optionB: "Support others and keep the team vibe positive",
-    dimension: "T-F" // Thinking vs Feeling
+    question: "Which describes you better?",
+    optionA: {
+      text: "I organize the group",
+      type: "J"
+    },
+    optionB: {
+      text: "I support the group",
+      type: "F"
+    }
   },
   {
     id: 4,
-    text: "When working alone, you feel:",
-    optionA: "Focused and productive",
-    optionB: "Disconnected and unmotivated",
-    dimension: "I-E" // Introversion vs Extraversion
+    question: "Which describes you better?",
+    optionA: {
+      text: "I enjoy working alone",
+      type: "I"
+    },
+    optionB: {
+      text: "I enjoy working with others",
+      type: "E"
+    }
   },
   {
     id: 5,
-    text: "You prefer tasks that are:",
-    optionA: "Structured and logical",
-    optionB: "Open-ended and imaginative",
-    dimension: "S-N" // Sensing vs Intuition
+    question: "Which describes you better?",
+    optionA: {
+      text: "I like clear instructions",
+      type: "S"
+    },
+    optionB: {
+      text: "I like open-ended tasks",
+      type: "N"
+    }
   },
   {
     id: 6,
-    text: "When deciding on a solution, you value:",
-    optionA: "Practicality and data",
-    optionB: "Feelings and potential impact on people",
-    dimension: "T-F" // Thinking vs Feeling
+    question: "Which describes you better?",
+    optionA: {
+      text: "I decide with logic",
+      type: "T"
+    },
+    optionB: {
+      text: "I decide with empathy",
+      type: "F"
+    }
   },
   {
     id: 7,
-    text: "You'd rather spend your day:",
-    optionA: "Analyzing data in Excel or coding",
-    optionB: "Designing visuals or writing content",
-    dimension: "S-N" // Sensing vs Intuition
+    question: "Which describes you better?",
+    optionA: {
+      text: "I prefer technical tasks",
+      type: "T"
+    },
+    optionB: {
+      text: "I prefer creative tasks",
+      type: "N"
+    }
   },
   {
     id: 8,
-    text: "Your ideal workplace is:",
-    optionA: "Quiet, focused, minimal distractions",
-    optionB: "Social, dynamic, full of energy",
-    dimension: "I-E" // Introversion vs Extraversion
+    question: "Which describes you better?",
+    optionA: {
+      text: "I like quiet workspaces",
+      type: "I"
+    },
+    optionB: {
+      text: "I like buzzing environments",
+      type: "E"
+    }
   },
   {
     id: 9,
-    text: "When facing a deadline, you:",
-    optionA: "Schedule your time to avoid last-minute stress",
-    optionB: "Thrive under pressure and do your best work at the end",
-    dimension: "J-P" // Judging vs Perceiving
+    question: "Which describes you better?",
+    optionA: {
+      text: "I finish early",
+      type: "J"
+    },
+    optionB: {
+      text: "I work best under pressure",
+      type: "P"
+    }
   },
   {
     id: 10,
-    text: "You feel more satisfied after:",
-    optionA: "Completing all your tasks efficiently",
-    optionB: "Creating something new or meaningful",
-    dimension: "S-N" // Sensing vs Intuition
+    question: "Which describes you better?",
+    optionA: {
+      text: "I feel great checking things off",
+      type: "S"
+    },
+    optionB: {
+      text: "I feel great starting something new",
+      type: "N"
+    }
   },
   {
     id: 11,
-    text: "You're more drawn to:",
-    optionA: "Startups and entrepreneurship",
-    optionB: "Large organizations with clear roles",
-    dimension: "J-P" // Judging vs Perceiving (entrepreneurship tends to be more P, structure more J)
+    question: "Which describes you better?",
+    optionA: {
+      text: "I'd start my own thing",
+      type: "P"
+    },
+    optionB: {
+      text: "I'd join a stable company",
+      type: "J"
+    }
   },
   {
     id: 12,
-    text: "You prefer learning:",
-    optionA: "Through books, tutorials, and solo study",
-    optionB: "Through discussion, collaboration, and hands-on experience",
-    dimension: "I-E" // Introversion vs Extraversion
+    question: "Which describes you better?",
+    optionA: {
+      text: "I like learning alone",
+      type: "I"
+    },
+    optionB: {
+      text: "I learn better with people",
+      type: "E"
+    }
   },
   {
     id: 13,
-    text: "You would rather:",
-    optionA: "Work with systems and processes",
-    optionB: "Work with people and emotions",
-    dimension: "T-F" // Thinking vs Feeling
+    question: "Which describes you better?",
+    optionA: {
+      text: "I prefer systems",
+      type: "T"
+    },
+    optionB: {
+      text: "I prefer people",
+      type: "F"
+    }
   },
   {
     id: 14,
-    text: "You trust:",
-    optionA: "Logic over emotion",
-    optionB: "Intuition over facts",
-    dimension: "T-F" // Thinking vs Feeling
+    question: "Which describes you better?",
+    optionA: {
+      text: "I trust facts",
+      type: "S"
+    },
+    optionB: {
+      text: "I trust gut feeling",
+      type: "N"
+    }
   },
   {
     id: 15,
-    text: "In meetings, you tend to:",
-    optionA: "Get straight to the point",
-    optionB: "Enjoy exploring all perspectives",
-    dimension: "J-P" // Judging vs Perceiving
+    question: "Which describes you better?",
+    optionA: {
+      text: "I keep meetings short and clear",
+      type: "T"
+    },
+    optionB: {
+      text: "I enjoy exploring ideas in meetings",
+      type: "F"
+    }
   },
   {
     id: 16,
-    text: "Which career sounds more appealing?",
-    optionA: "Data analyst or software engineer",
-    optionB: "Marketing strategist or UX designer",
-    dimension: "S-N" // Sensing vs Intuition
+    question: "Which describes you better?",
+    optionA: {
+      text: "I'd rather be a data analyst or engineer",
+      type: "T"
+    },
+    optionB: {
+      text: "I'd rather be a designer or content creator",
+      type: "N"
+    }
   },
   {
     id: 17,
-    text: "You recharge by:",
-    optionA: "Spending time alone or with close friends",
-    optionB: "Being around lots of people or social events",
-    dimension: "I-E" // Introversion vs Extraversion
+    question: "Which describes you better?",
+    optionA: {
+      text: "I recharge alone",
+      type: "I"
+    },
+    optionB: {
+      text: "I recharge with people",
+      type: "E"
+    }
   },
   {
     id: 18,
-    text: "When working on a new idea, you:",
-    optionA: "Evaluate feasibility and plan next steps",
-    optionB: "Dream big and figure it out later",
-    dimension: "S-N" // Sensing vs Intuition
+    question: "Which describes you better?",
+    optionA: {
+      text: "I ask \"Will it work?\"",
+      type: "S"
+    },
+    optionB: {
+      text: "I ask \"What if?\"",
+      type: "N"
+    }
   },
   {
     id: 19,
-    text: "In conflict, you:",
-    optionA: "Stay calm, seek logical resolution",
-    optionB: "Read the room, prioritize harmony",
-    dimension: "T-F" // Thinking vs Feeling
+    question: "Which describes you better?",
+    optionA: {
+      text: "I stay calm in conflict",
+      type: "T"
+    },
+    optionB: {
+      text: "I read emotions in conflict",
+      type: "F"
+    }
   },
   {
     id: 20,
-    text: "Your long-term goal is to:",
-    optionA: "Build expertise and be the best in your field",
-    optionB: "Make a difference and inspire others",
-    dimension: "T-F" // Thinking vs Feeling
+    question: "Which describes you better?",
+    optionA: {
+      text: "I want to master my field",
+      type: "J"
+    },
+    optionB: {
+      text: "I want to make an impact",
+      type: "F"
+    }
   }
 ];
