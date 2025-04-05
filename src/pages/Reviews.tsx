@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -26,17 +25,31 @@ import {
   Award,
   BadgeCheck,
 } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
-const TeamMember = ({ name, role, description }: { name: string; role: string; description: string }) => (
+const TeamMember = ({ 
+  name, 
+  role, 
+  description, 
+  imageSrc 
+}: { 
+  name: string; 
+  role: string; 
+  description: string; 
+  imageSrc: string 
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
     className="flex flex-col items-center p-4"
   >
-    <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-3">
-      <Users className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-    </div>
+    <Avatar className="w-24 h-24 border-2 border-blue-200 dark:border-blue-800 mb-3">
+      <AvatarImage src={imageSrc} alt={name} className="object-cover" />
+      <AvatarFallback>
+        <Users className="w-12 h-12 text-blue-600 dark:text-blue-400" />
+      </AvatarFallback>
+    </Avatar>
     <h3 className="text-lg font-semibold">{name}</h3>
     <p className="text-sm text-muted-foreground">{role}</p>
     <p className="text-sm text-center mt-2 max-w-xs">{description}</p>
@@ -99,7 +112,6 @@ const Reviews = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Load saved reviews from localStorage
     const savedData = localStorage.getItem("sbh2025_reviews");
     if (savedData) {
       setSavedReviews(JSON.parse(savedData));
@@ -123,11 +135,9 @@ const Reviews = () => {
     const newReview = { rating, text: review };
     const updatedReviews = [...savedReviews, newReview];
     
-    // Save to localStorage
     localStorage.setItem("sbh2025_reviews", JSON.stringify(updatedReviews));
     setSavedReviews(updatedReviews);
     
-    // Reset form
     setRating(0);
     setReview("");
     
@@ -191,19 +201,22 @@ const Reviews = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <TeamMember 
-                    name="Pramit Datta" 
-                    role="Team Lead & Developer" 
-                    description="Responsible for project architecture and coordinating development efforts."
-                  />
-                  <TeamMember 
                     name="Oum Halder" 
                     role="UI/UX Designer & Developer" 
                     description="Created the user interface and implemented interactive components."
+                    imageSrc="/lovable-uploads/de1cc39d-3c96-48cf-8e95-09fe3eb4613f.png"
+                  />
+                  <TeamMember 
+                    name="Pramit Datta" 
+                    role="Team Lead & Developer" 
+                    description="Responsible for project architecture and coordinating development efforts."
+                    imageSrc="/lovable-uploads/d318be02-eb09-4942-9467-8a197ba182a6.png"
                   />
                   <TeamMember 
                     name="Sagnik Mondal" 
                     role="Content Strategist & Developer" 
                     description="Developed career guidance content and implemented data integration."
+                    imageSrc="/lovable-uploads/6d9928bf-39b2-4cda-98ea-7f47bed22e1b.png"
                   />
                 </div>
               </CardContent>
@@ -307,7 +320,6 @@ const Reviews = () => {
                 </div>
               </motion.div>
             )}
-
           </motion.div>
         </main>
       </div>
