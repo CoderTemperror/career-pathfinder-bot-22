@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Lightbulb, X, Menu } from "lucide-react";
+import { Lightbulb, X, Menu, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -79,6 +79,17 @@ const Navbar = () => {
               >
                 Chat
               </Link>
+              
+              <Link
+                to="/reviews"
+                className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
+                  location.pathname === "/reviews"
+                    ? "bg-primary/10 font-medium text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              >
+                Reviews
+              </Link>
             </div>
             
             <ThemeToggle />
@@ -140,6 +151,16 @@ const Navbar = () => {
                 }`}
               >
                 Chat
+              </Link>
+              <Link
+                to="/reviews"
+                className={`block px-3 py-2 rounded-md w-full text-center ${
+                  location.pathname === "/reviews"
+                    ? "bg-primary/10 font-medium text-foreground"
+                    : "text-muted-foreground hover:bg-accent"
+                }`}
+              >
+                Reviews
               </Link>
             </div>
           </motion.div>
