@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -7,7 +6,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import RatingEmoji from './RatingEmoji';
 import { Review } from '@/services/reviewService';
 
@@ -43,18 +42,23 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
   });
 
   const handleSubmit = (data: FormValues) => {
-    onSubmit(data);
+    const reviewData: Omit<Review, 'id' | 'date'> = {
+      name: data.name,
+      email: data.email,
+      rating: data.rating,
+      feedback: data.feedback,
+      source: data.source || 'Website Review Form'
+    };
+
+    onSubmit(reviewData);
     
-    // Show success state
     setShowSuccessState(true);
     
-    // Show toast
     toast({
       title: "Thank you for your feedback!",
       description: "Your review has been submitted successfully.",
     });
     
-    // Reset form after a delay
     setTimeout(() => {
       form.reset();
       setShowSuccessState(false);
@@ -81,7 +85,11 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
                 <FormItem className="space-y-4">
                   <FormLabel className="text-base">How would you rate your experience?</FormLabel>
                   <FormControl>
-                    <RatingEmoji value={field.value} onChange={field.onChange} />
+                    <RatingEmoji 
+                      value={field.value} 
+                      currentRating={form.watch('rating')} 
+                      onSelect={field.onChange}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

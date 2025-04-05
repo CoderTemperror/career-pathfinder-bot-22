@@ -17,6 +17,7 @@ const RatingEmoji = ({
 
   return (
     <motion.button
+      type="button"  // Add type to prevent form submission
       whileHover={{ 
         scale: 1.2,
         rotate: [0, 15, 0],

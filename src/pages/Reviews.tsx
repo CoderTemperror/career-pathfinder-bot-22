@@ -8,7 +8,7 @@ import ReviewForm from '@/components/reviews/ReviewForm';
 import PreviousReviews from '@/components/reviews/PreviousReviews';
 import TeamSection from '@/components/reviews/TeamSection';
 import reviewService, { Review } from '@/services/reviewService';
-import { fadeInUp } from '@/utils/animations';
+import { fadeIn } from '@/utils/animations';  // Changed from fadeInUp to fadeIn
 
 const Reviews = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -40,7 +40,7 @@ const Reviews = () => {
           <div className="pt-10 max-w-5xl mx-auto">
             <motion.h1 
               className="text-3xl md:text-4xl font-bold text-center mb-2"
-              variants={fadeInUp}
+              variants={fadeIn}  // Changed from fadeInUp to fadeIn
               initial="initial"
               animate="animate"
             >
@@ -49,7 +49,7 @@ const Reviews = () => {
             
             <motion.p 
               className="text-center text-muted-foreground mb-12"
-              variants={fadeInUp}
+              variants={fadeIn}  // Changed from fadeInUp to fadeIn
               initial="initial"
               animate="animate"
               custom={1}
