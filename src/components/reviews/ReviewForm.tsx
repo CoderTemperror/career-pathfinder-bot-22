@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -12,10 +13,10 @@ import { Review } from '@/services/reviewService';
 
 // Validation schema for the form
 const formSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters' }).max(50),
-  email: z.string().email({ message: 'Please enter a valid email address' }),
+  name: z.string().optional(),
+  email: z.string().email({ message: 'Please enter a valid email address' }).optional(),
   rating: z.number().min(1, { message: 'Please select a rating' }).max(5),
-  feedback: z.string().min(10, { message: 'Feedback must be at least 10 characters' }).max(500),
+  feedback: z.string().optional(),
   source: z.string().optional(),
 });
 
@@ -43,10 +44,10 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
 
   const handleSubmit = (data: FormValues) => {
     const reviewData: Omit<Review, 'id' | 'date'> = {
-      name: data.name,
-      email: data.email,
+      name: data.name || 'Anonymous',
+      email: data.email || '',
       rating: data.rating,
-      feedback: data.feedback,
+      feedback: data.feedback || '',
       source: data.source || 'Website Review Form'
     };
 
@@ -91,7 +92,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
                       onSelect={field.onChange}
                     />
                   </FormControl>
-                  <FormMessage />
+                  <FormMessage className="text-red-500" />
                 </FormItem>
               )}
             />
@@ -102,7 +103,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Name (Optional)</FormLabel>
                     <FormControl>
                       <Input placeholder="Your name" {...field} />
                     </FormControl>
@@ -116,7 +117,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email (Optional)</FormLabel>
                     <FormControl>
                       <Input placeholder="Your email" type="email" {...field} />
                     </FormControl>
@@ -131,7 +132,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
               name="feedback"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Your Feedback</FormLabel>
+                  <FormLabel>Your Feedback (Optional)</FormLabel>
                   <FormControl>
                     <Textarea 
                       placeholder="Tell us about your experience..." 
