@@ -13,8 +13,8 @@ import { Review } from '@/services/reviewService';
 
 // Validation schema for the form
 const formSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().email({ message: 'Please enter a valid email address' }).optional(),
+  name: z.string().min(2, { message: 'Name is required (at least 2 characters)' }),
+  email: z.string().email({ message: 'Please enter a valid email address' }),
   rating: z.number().min(1, { message: 'Please select a rating' }).max(5),
   feedback: z.string().optional(),
   source: z.string().optional(),
@@ -44,8 +44,8 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
 
   const handleSubmit = (data: FormValues) => {
     const reviewData: Omit<Review, 'id' | 'date'> = {
-      name: data.name || 'Anonymous',
-      email: data.email || '',
+      name: data.name,
+      email: data.email,
       rating: data.rating,
       feedback: data.feedback || '',
       source: data.source || 'Website Review Form'
@@ -84,7 +84,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
               name="rating"
               render={({ field }) => (
                 <FormItem className="space-y-4">
-                  <FormLabel className="text-base">How would you rate your experience?</FormLabel>
+                  <FormLabel className="text-base">How would you rate your experience? *</FormLabel>
                   <FormControl>
                     <RatingEmoji 
                       value={field.value} 
@@ -103,7 +103,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name (Optional)</FormLabel>
+                    <FormLabel>Name *</FormLabel>
                     <FormControl>
                       <Input placeholder="Your name" {...field} />
                     </FormControl>
@@ -117,7 +117,7 @@ const ReviewForm = ({ onSubmit, isSubmitting }: ReviewFormProps) => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email (Optional)</FormLabel>
+                    <FormLabel>Email *</FormLabel>
                     <FormControl>
                       <Input placeholder="Your email" type="email" {...field} />
                     </FormControl>
