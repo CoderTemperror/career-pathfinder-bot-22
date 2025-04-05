@@ -5,241 +5,141 @@ export const mbtiQuestions: MBTIQuestion[] = [
   {
     id: 1,
     question: "Which describes you better?",
-    optionA: {
-      text: "I plan my day ahead",
-      type: "J"
-    },
-    optionB: {
-      text: "I go with the flow",
-      type: "P"
-    }
+    optionA: "I plan my day ahead",
+    optionB: "I go with the flow",
+    dimension: "J-P"
   },
   {
     id: 2,
     question: "Which describes you better?",
-    optionA: {
-      text: "I love solving problems",
-      type: "T"
-    },
-    optionB: {
-      text: "I love creating ideas",
-      type: "N"
-    }
+    optionA: "I love solving problems",
+    optionB: "I love creating ideas",
+    dimension: "T-F" // This maps to Thinking vs Intuition
   },
   {
     id: 3,
     question: "Which describes you better?",
-    optionA: {
-      text: "I organize the group",
-      type: "J"
-    },
-    optionB: {
-      text: "I support the group",
-      type: "F"
-    }
+    optionA: "I organize the group",
+    optionB: "I support the group",
+    dimension: "J-F" // This maps to Judging vs Feeling
   },
   {
     id: 4,
     question: "Which describes you better?",
-    optionA: {
-      text: "I enjoy working alone",
-      type: "I"
-    },
-    optionB: {
-      text: "I enjoy working with others",
-      type: "E"
-    }
+    optionA: "I enjoy working alone",
+    optionB: "I enjoy working with others",
+    dimension: "I-E"
   },
   {
     id: 5,
     question: "Which describes you better?",
-    optionA: {
-      text: "I like clear instructions",
-      type: "S"
-    },
-    optionB: {
-      text: "I like open-ended tasks",
-      type: "N"
-    }
+    optionA: "I like clear instructions",
+    optionB: "I like open-ended tasks",
+    dimension: "S-N"
   },
   {
     id: 6,
     question: "Which describes you better?",
-    optionA: {
-      text: "I decide with logic",
-      type: "T"
-    },
-    optionB: {
-      text: "I decide with empathy",
-      type: "F"
-    }
+    optionA: "I decide with logic",
+    optionB: "I decide with empathy",
+    dimension: "T-F"
   },
   {
     id: 7,
     question: "Which describes you better?",
-    optionA: {
-      text: "I prefer technical tasks",
-      type: "T"
-    },
-    optionB: {
-      text: "I prefer creative tasks",
-      type: "N"
-    }
+    optionA: "I prefer technical tasks",
+    optionB: "I prefer creative tasks",
+    dimension: "T-N" // This maps to Thinking vs Intuition
   },
   {
     id: 8,
     question: "Which describes you better?",
-    optionA: {
-      text: "I like quiet workspaces",
-      type: "I"
-    },
-    optionB: {
-      text: "I like buzzing environments",
-      type: "E"
-    }
+    optionA: "I like quiet workspaces",
+    optionB: "I like buzzing environments",
+    dimension: "I-E"
   },
   {
     id: 9,
     question: "Which describes you better?",
-    optionA: {
-      text: "I finish early",
-      type: "J"
-    },
-    optionB: {
-      text: "I work best under pressure",
-      type: "P"
-    }
+    optionA: "I finish early",
+    optionB: "I work best under pressure",
+    dimension: "J-P"
   },
   {
     id: 10,
     question: "Which describes you better?",
-    optionA: {
-      text: "I feel great checking things off",
-      type: "S"
-    },
-    optionB: {
-      text: "I feel great starting something new",
-      type: "N"
-    }
+    optionA: "I feel great checking things off",
+    optionB: "I feel great starting something new",
+    dimension: "S-N"
   },
   {
     id: 11,
     question: "Which describes you better?",
-    optionA: {
-      text: "I'd start my own thing",
-      type: "P"
-    },
-    optionB: {
-      text: "I'd join a stable company",
-      type: "J"
-    }
+    optionA: "I'd start my own thing",
+    optionB: "I'd join a stable company",
+    dimension: "P-J"
   },
   {
     id: 12,
     question: "Which describes you better?",
-    optionA: {
-      text: "I like learning alone",
-      type: "I"
-    },
-    optionB: {
-      text: "I learn better with people",
-      type: "E"
-    }
+    optionA: "I like learning alone",
+    optionB: "I learn better with people",
+    dimension: "I-E"
   },
   {
     id: 13,
     question: "Which describes you better?",
-    optionA: {
-      text: "I prefer systems",
-      type: "T"
-    },
-    optionB: {
-      text: "I prefer people",
-      type: "F"
-    }
+    optionA: "I prefer systems",
+    optionB: "I prefer people",
+    dimension: "T-F"
   },
   {
     id: 14,
     question: "Which describes you better?",
-    optionA: {
-      text: "I trust facts",
-      type: "S"
-    },
-    optionB: {
-      text: "I trust gut feeling",
-      type: "N"
-    }
+    optionA: "I trust facts",
+    optionB: "I trust gut feeling",
+    dimension: "S-N"
   },
   {
     id: 15,
     question: "Which describes you better?",
-    optionA: {
-      text: "I keep meetings short and clear",
-      type: "T"
-    },
-    optionB: {
-      text: "I enjoy exploring ideas in meetings",
-      type: "F"
-    }
+    optionA: "I keep meetings short and clear",
+    optionB: "I enjoy exploring ideas in meetings",
+    dimension: "T-F"
   },
   {
     id: 16,
     question: "Which describes you better?",
-    optionA: {
-      text: "I'd rather be a data analyst or engineer",
-      type: "T"
-    },
-    optionB: {
-      text: "I'd rather be a designer or content creator",
-      type: "N"
-    }
+    optionA: "I'd rather be a data analyst or engineer",
+    optionB: "I'd rather be a designer or content creator",
+    dimension: "T-N" // This maps to Thinking vs Intuition
   },
   {
     id: 17,
     question: "Which describes you better?",
-    optionA: {
-      text: "I recharge alone",
-      type: "I"
-    },
-    optionB: {
-      text: "I recharge with people",
-      type: "E"
-    }
+    optionA: "I recharge alone",
+    optionB: "I recharge with people",
+    dimension: "I-E"
   },
   {
     id: 18,
     question: "Which describes you better?",
-    optionA: {
-      text: "I ask \"Will it work?\"",
-      type: "S"
-    },
-    optionB: {
-      text: "I ask \"What if?\"",
-      type: "N"
-    }
+    optionA: "I ask \"Will it work?\"",
+    optionB: "I ask \"What if?\"",
+    dimension: "S-N"
   },
   {
     id: 19,
     question: "Which describes you better?",
-    optionA: {
-      text: "I stay calm in conflict",
-      type: "T"
-    },
-    optionB: {
-      text: "I read emotions in conflict",
-      type: "F"
-    }
+    optionA: "I stay calm in conflict",
+    optionB: "I read emotions in conflict",
+    dimension: "T-F"
   },
   {
     id: 20,
     question: "Which describes you better?",
-    optionA: {
-      text: "I want to master my field",
-      type: "J"
-    },
-    optionB: {
-      text: "I want to make an impact",
-      type: "F"
-    }
+    optionA: "I want to master my field",
+    optionB: "I want to make an impact",
+    dimension: "J-F" // This maps to Judging vs Feeling
   }
 ];
