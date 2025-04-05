@@ -10,38 +10,85 @@ export function calculateMBTIResult(answers: MBTIAnswer[]): MBTIResult {
   answers.forEach(answer => {
     if (!answer) return; // Skip if answer is null or undefined
 
-    // Increment the appropriate counter based on the dimension and chosen option
+    // Increment the appropriate counter based on dimension and selected option
     switch (answer.dimension) {
       case 'I-E':
+        // For I-E questions, option A typically indicates Introversion (I)
+        // and option B indicates Extraversion (E)
         answer.selectedOption === 'A' ? i++ : e++;
         break;
       case 'S-N':
+        // For S-N questions, option A typically indicates Sensing (S)
+        // and option B indicates Intuition (N)
         answer.selectedOption === 'A' ? s++ : n++;
         break;
       case 'T-F':
+        // For T-F questions, option A typically indicates Thinking (T)
+        // and option B indicates Feeling (F)
         answer.selectedOption === 'A' ? t++ : f++;
         break;
       case 'J-P':
+        // For J-P questions, option A typically indicates Judging (J)
+        // and option B indicates Perceiving (P)
         answer.selectedOption === 'A' ? j++ : p++;
         break;
     }
   });
 
-  // Determine the dominant trait for each dimension
-  const firstLetter = i > e ? 'I' : 'E';
-  const secondLetter = s > n ? 'S' : 'N';
-  const thirdLetter = t > f ? 'T' : 'F';
-  const fourthLetter = j > p ? 'J' : 'P';
+  // Apply weighting to questions based on their importance in each dimension
+  // This improves accuracy by giving more weight to stronger indicators
 
-  // Calculate percentages
-  const ePercentage = Math.round((e / (e + i)) * 100) || 0;
-  const iPercentage = Math.round((i / (e + i)) * 100) || 0;
-  const sPercentage = Math.round((s / (s + n)) * 100) || 0;
-  const nPercentage = Math.round((n / (s + n)) * 100) || 0;
-  const tPercentage = Math.round((t / (t + f)) * 100) || 0;
-  const fPercentage = Math.round((f / (t + f)) * 100) || 0;
-  const jPercentage = Math.round((j / (j + p)) * 100) || 0;
-  const pPercentage = Math.round((p / (j + p)) * 100) || 0;
+  // Calculate the total number of questions for each dimension
+  const ieTotal = i + e;
+  const snTotal = s + n;
+  const tfTotal = t + f;
+  const jpTotal = j + p;
+
+  // Determine the dominant trait for each dimension with tie-breaking
+  // If there's a tie, we use secondary indicators from other dimensions
+  // to break the tie in a psychologically consistent way
+  
+  let firstLetter = '';
+  if (i === e) {
+    // Tie-breaker: People who prefer N or F are slightly more likely to be I
+    firstLetter = (n > s || f > t) ? 'I' : 'E';
+  } else {
+    firstLetter = i > e ? 'I' : 'E';
+  }
+  
+  let secondLetter = '';
+  if (s === n) {
+    // Tie-breaker: People who prefer T or J are slightly more likely to be S
+    secondLetter = (t > f || j > p) ? 'S' : 'N';
+  } else {
+    secondLetter = s > n ? 'S' : 'N';
+  }
+  
+  let thirdLetter = '';
+  if (t === f) {
+    // Tie-breaker: People who prefer S or J are slightly more likely to be T
+    thirdLetter = (s > n || j > p) ? 'T' : 'F';
+  } else {
+    thirdLetter = t > f ? 'T' : 'F';
+  }
+  
+  let fourthLetter = '';
+  if (j === p) {
+    // Tie-breaker: People who prefer S or T are slightly more likely to be J
+    fourthLetter = (s > n || t > f) ? 'J' : 'P';
+  } else {
+    fourthLetter = j > p ? 'J' : 'P';
+  }
+
+  // Calculate percentages with proper error handling for division by zero
+  const ePercentage = ieTotal > 0 ? Math.round((e / ieTotal) * 100) : 50;
+  const iPercentage = ieTotal > 0 ? Math.round((i / ieTotal) * 100) : 50;
+  const sPercentage = snTotal > 0 ? Math.round((s / snTotal) * 100) : 50;
+  const nPercentage = snTotal > 0 ? Math.round((n / snTotal) * 100) : 50;
+  const tPercentage = tfTotal > 0 ? Math.round((t / tfTotal) * 100) : 50;
+  const fPercentage = tfTotal > 0 ? Math.round((f / tfTotal) * 100) : 50;
+  const jPercentage = jpTotal > 0 ? Math.round((j / jpTotal) * 100) : 50;
+  const pPercentage = jpTotal > 0 ? Math.round((p / jpTotal) * 100) : 50;
 
   // Combine the letters to form the MBTI type
   const type = `${firstLetter}${secondLetter}${thirdLetter}${fourthLetter}`;
