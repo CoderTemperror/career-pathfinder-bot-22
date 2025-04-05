@@ -1,5 +1,6 @@
 
 import { personalityDescriptions } from './personalityDescriptions';
+import { MBTIPersonalityInfo } from './types';
 
 export function getSuggestedPrompts(mbtiType: string): string[] {
   const generalPrompts = [
@@ -10,7 +11,7 @@ export function getSuggestedPrompts(mbtiType: string): string[] {
     `How can I balance my ${mbtiType} strengths and weaknesses in my career?`,
   ];
   
-  const personalityInfo = personalityDescriptions[mbtiType] || { careers: [] };
+  const personalityInfo = personalityDescriptions[mbtiType] as MBTIPersonalityInfo | undefined || { careers: [] };
   
   const careerPrompts = personalityInfo.careers.map(career => 
     `Tell me more about a career as a ${career}`

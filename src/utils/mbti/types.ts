@@ -39,3 +39,9 @@ export interface MBTIResult {
     JP: MBTIDimensionResult;
   };
 }
+
+// Add the missing MBTIPersonalityInfo interface
+export interface MBTIPersonalityInfo {
+  description: string;
+  careers: string[];
+}

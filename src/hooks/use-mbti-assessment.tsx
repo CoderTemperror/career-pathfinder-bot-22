@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import StorageService from '@/services/storage';
 import { 
   mbtiQuestions, 
-  calculateMBTIType, 
+  calculateMBTIResult, 
   personalityDescriptions 
 } from '@/utils/mbti';
 
@@ -79,13 +79,19 @@ export const useMBTIAssessment = () => {
     setIsSubmitting(true);
     
     // Convert answers to format needed for calculation
-    const formattedAnswers = Object.entries(answers).map(([questionId, answer]) => ({
-      questionId: parseInt(questionId),
-      answer
-    }));
+    const formattedAnswers = Object.entries(answers).map(([questionId, selectedOption]) => {
+      // Find the corresponding question to get the dimension
+      const question = mbtiQuestions.find(q => q.id === parseInt(questionId));
+      return {
+        questionId: parseInt(questionId),
+        selectedOption,
+        dimension: question?.dimension || "I-E" // Fallback dimension
+      };
+    });
     
     // Calculate MBTI type
-    const mbtiType = calculateMBTIType(formattedAnswers);
+    const result = calculateMBTIResult(formattedAnswers);
+    const mbtiType = result.type;
     
     // Get personality information
     const personalityInfo = personalityDescriptions[mbtiType] || {
@@ -94,19 +100,19 @@ export const useMBTIAssessment = () => {
     };
     
     // Save MBTI results to storage for later use
-    const result = {
+    const resultData = {
       type: mbtiType,
       description: personalityInfo.description,
       careers: personalityInfo.careers,
       timestamp: new Date().toISOString()
     };
     
-    StorageService.set('mbti_result', result);
+    StorageService.set('mbti_result', resultData);
     
     // Save MBTI type separately for persistent access from chat
     StorageService.saveMbtiType(mbtiType);
     
-    setMbtiResult(result);
+    setMbtiResult(resultData);
     setIsSubmitting(false);
     
     toast.success(`Your personality type is ${mbtiType}!`);
