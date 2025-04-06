@@ -1,4 +1,3 @@
-
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import TransitionLayout from '@/components/TransitionLayout';
@@ -139,16 +138,6 @@ const Index = () => {
               </Button>
             </div>
           </motion.div>
-          
-          <div className="mb-16">
-            <Button 
-              variant="outline"
-              className="mx-auto block border-blue-400/30 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/30"
-              onClick={() => navigate('/feedback')}
-            >
-              Share Your Feedback
-            </Button>
-          </div>
         </div>
       </div>
     </TransitionLayout>
