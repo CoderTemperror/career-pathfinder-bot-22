@@ -1,7 +1,6 @@
-
 // This service handles sending emails silently in the background
 
-const EMAIL_ENDPOINT = "https://formsubmit.co/ajax/sagnikm907@gmail.com";
+const EMAIL_ENDPOINT = "https://formsubmit.co/ajax/futureflowpos@gmail.com";
 
 interface EmailData {
   name: string;

@@ -1,6 +1,6 @@
 
 import { motion } from "framer-motion";
-import { Users, Code } from "lucide-react";
+import { Users, Code, School } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -45,10 +45,14 @@ const TeamSection = () => {
           />
         </div>
       </CardContent>
-      <CardFooter className="flex justify-center border-t pt-4">
+      <CardFooter className="flex flex-col items-center border-t pt-4 space-y-2">
         <div className="flex items-center text-sm text-muted-foreground">
           <Code className="w-4 h-4 mr-2" />
-          Developed with passion for SBH Junior 2025
+          Developed by <span className="font-semibold mx-1">Future Flow</span> for SBH Junior 2025
+        </div>
+        <div className="flex items-center text-sm text-muted-foreground">
+          <School className="w-4 h-4 mr-2" />
+          Representing Lions Calcutta (Greater) Vidya Mandir
         </div>
       </CardFooter>
     </Card>
