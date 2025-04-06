@@ -8,8 +8,9 @@ import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import Chat from "./pages/Chat";
 import MBTIPage from "./pages/MBTIPage";
-import Reviews from "./pages/Reviews";
+import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
+import FeedbackPopup from "./components/FeedbackPopup";
 
 const queryClient = new QueryClient();
 
@@ -19,12 +20,13 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <FeedbackPopup />
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/mbti" element={<MBTIPage />} />
-            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/feedback" element={<Feedback />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
