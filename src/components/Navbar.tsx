@@ -81,14 +81,14 @@ const Navbar = () => {
               </Link>
               
               <Link
-                to="/reviews"
+                to="/feedback"
                 className={`px-3 py-1.5 rounded-md text-sm transition-colors ${
-                  location.pathname === "/reviews"
+                  location.pathname === "/feedback"
                     ? "bg-primary/10 font-medium text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 }`}
               >
-                Reviews
+                Feedback
               </Link>
             </div>
             
@@ -153,14 +153,14 @@ const Navbar = () => {
                 Chat
               </Link>
               <Link
-                to="/reviews"
+                to="/feedback"
                 className={`block px-3 py-2 rounded-md w-full text-center ${
-                  location.pathname === "/reviews"
+                  location.pathname === "/feedback"
                     ? "bg-primary/10 font-medium text-foreground"
                     : "text-muted-foreground hover:bg-accent"
                 }`}
               >
-                Reviews
+                Feedback
               </Link>
             </div>
           </motion.div>

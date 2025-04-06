@@ -4,10 +4,12 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { RotateCcw, ArrowRight, CheckCircle2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import emailService from '@/services/emailService';
+import { getPersonalityImage, getCategoryColor } from '@/utils/mbti/personalityImages';
 
 interface MBTIResultsProps {
   mbtiResult: {
@@ -26,6 +28,9 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
   const [personalityType, setPersonalityType] = useState('');
   const [isSendingFeedback, setIsSendingFeedback] = useState(false);
   
+  const personalityInfo = getPersonalityImage(mbtiResult.type);
+  const categoryColorClass = getCategoryColor(personalityInfo.category);
+  
   const handleSubmitFeedback = async () => {
     // Check if at least one field is filled
     if (name.trim() === '' && qualification.trim() === '' && 
@@ -40,7 +45,7 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
       // Prepare feedback data
       const feedbackData = {
         name: name || "Anonymous",
-        email: "mbti-feedback@example.com", // Placeholder email
+        email: "futureflowpos@gmail.com", // Updated email
         rating: isUnsatisfied ? 3 : 5, // 5 for satisfied, 3 for unsatisfied
         feedback: `
           User ${isUnsatisfied ? 'is not satisfied' : 'is satisfied'} with MBTI results.
@@ -84,9 +89,27 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
                 stiffness: 260,
                 damping: 20 
               }}
-              className="bg-emerald-500 h-16 w-16 rounded-full flex items-center justify-center"
+              className="mb-4"
             >
-              <CheckCircle2 className="h-8 w-8 text-white" />
+              <Badge className={`${categoryColorClass} text-xs px-3 py-1 mb-3`}>
+                {personalityInfo.category}
+              </Badge>
+              
+              {personalityInfo.imageUrl && (
+                <div className="flex justify-center mb-4">
+                  <div className="relative w-32 h-32 flex items-center justify-center">
+                    {/* This uses the full image but positions it to show only the relevant personality type */}
+                    <div 
+                      className="absolute inset-0 bg-no-repeat bg-cover"
+                      style={{
+                        backgroundImage: `url(${personalityInfo.imageUrl})`,
+                        backgroundPosition: getBackgroundPosition(mbtiResult.type),
+                        backgroundSize: '400%' // Adjust based on the grid layout
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
           
@@ -94,7 +117,7 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
           <p className="text-lg text-foreground mb-4">
             Your personality type is <span className="font-bold text-blue-500">{mbtiResult.type}</span>
           </p>
-          <p className="mb-6 text-muted-foreground">{mbtiResult.description}</p>
+          <p className="mb-6 text-muted-foreground">{personalityInfo.description}</p>
           
           <div className="flex flex-wrap gap-3 justify-center">
             <Link to="/chat">
@@ -234,6 +257,38 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
       )}
     </motion.div>
   );
+};
+
+// Helper function to determine the background position based on personality type
+const getBackgroundPosition = (mbtiType: string): string => {
+  // Position mappings based on the 4x4 grid in the image
+  const positions: Record<string, string> = {
+    // Analysts (Row 1)
+    'INTJ': '0% 0%',     // Top-left
+    'INTP': '33.33% 0%', // Top, second from left
+    'ENTJ': '66.66% 0%', // Top, third from left
+    'ENTP': '100% 0%',   // Top-right
+    
+    // Diplomats (Row 2)
+    'INFJ': '0% 33.33%',     // Second row, left
+    'INFP': '33.33% 33.33%', // Second row, second from left
+    'ENFJ': '66.66% 33.33%', // Second row, third from left
+    'ENFP': '100% 33.33%',   // Second row, right
+    
+    // Sentinels (Row 3)
+    'ISTJ': '0% 66.66%',     // Third row, left
+    'ISFJ': '33.33% 66.66%', // Third row, second from left
+    'ESTJ': '66.66% 66.66%', // Third row, third from left
+    'ESFJ': '100% 66.66%',   // Third row, right
+    
+    // Explorers (Row 4)
+    'ISTP': '0% 100%',     // Bottom-left
+    'ISFP': '33.33% 100%', // Bottom, second from left
+    'ESTP': '66.66% 100%', // Bottom, third from left
+    'ESFP': '100% 100%',   // Bottom-right
+  };
+  
+  return positions[mbtiType] || '0% 0%';
 };
 
 export default MBTIResults;
