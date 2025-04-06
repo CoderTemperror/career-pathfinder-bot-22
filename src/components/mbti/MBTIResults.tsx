@@ -4,12 +4,10 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Textarea } from '@/components/ui/textarea';
 import { RotateCcw, ArrowRight, CheckCircle2, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import emailService from '@/services/emailService';
-import { getPersonalityImage, getCategoryColor } from '@/utils/mbti/personalityImages';
 
 interface MBTIResultsProps {
   mbtiResult: {
@@ -28,9 +26,6 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
   const [personalityType, setPersonalityType] = useState('');
   const [isSendingFeedback, setIsSendingFeedback] = useState(false);
   
-  const personalityInfo = getPersonalityImage(mbtiResult.type);
-  const categoryColorClass = getCategoryColor(personalityInfo.category);
-  
   const handleSubmitFeedback = async () => {
     // Check if at least one field is filled
     if (name.trim() === '' && qualification.trim() === '' && 
@@ -45,7 +40,7 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
       // Prepare feedback data
       const feedbackData = {
         name: name || "Anonymous",
-        email: "futureflowpos@gmail.com", // Updated email
+        email: "mbti-feedback@example.com", // Placeholder email
         rating: isUnsatisfied ? 3 : 5, // 5 for satisfied, 3 for unsatisfied
         feedback: `
           User ${isUnsatisfied ? 'is not satisfied' : 'is satisfied'} with MBTI results.
@@ -89,21 +84,9 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
                 stiffness: 260,
                 damping: 20 
               }}
-              className="mb-4"
+              className="bg-emerald-500 h-16 w-16 rounded-full flex items-center justify-center"
             >
-              <Badge className={`${categoryColorClass} text-xs px-3 py-1 mb-3`}>
-                {personalityInfo.category}
-              </Badge>
-              
-              {personalityInfo.imageUrl && (
-                <div className="flex justify-center mb-4">
-                  <img 
-                    src={personalityInfo.imageUrl}
-                    alt={`${mbtiResult.type} personality type`}
-                    className="w-32 h-32 object-cover rounded-full border-2 border-primary/20"
-                  />
-                </div>
-              )}
+              <CheckCircle2 className="h-8 w-8 text-white" />
             </motion.div>
           </div>
           
@@ -111,7 +94,7 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
           <p className="text-lg text-foreground mb-4">
             Your personality type is <span className="font-bold text-blue-500">{mbtiResult.type}</span>
           </p>
-          <p className="mb-6 text-muted-foreground">{personalityInfo.description}</p>
+          <p className="mb-6 text-muted-foreground">{mbtiResult.description}</p>
           
           <div className="flex flex-wrap gap-3 justify-center">
             <Link to="/chat">
