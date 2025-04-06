@@ -50,7 +50,7 @@ const PreviousReviews = ({ reviews }: PreviousReviewsProps) => {
         <CardContent>
           <div className="space-y-4">
             <div className="text-muted-foreground text-center py-8">
-              No reviews yet. Be the first to leave feedback!
+              No feedback yet. Be the first to leave feedback!
             </div>
           </div>
         </CardContent>
