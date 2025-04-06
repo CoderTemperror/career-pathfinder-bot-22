@@ -1,13 +1,8 @@
 
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { RotateCcw, ArrowRight, CheckCircle2, Send } from 'lucide-react';
-import { toast } from 'sonner';
-import emailService from '@/services/emailService';
+import { RotateCcw, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 interface MBTIResultsProps {
   mbtiResult: {
@@ -19,52 +14,6 @@ interface MBTIResultsProps {
 }
 
 const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
-  const [isUnsatisfied, setIsUnsatisfied] = useState(false);
-  const [name, setName] = useState('');
-  const [qualification, setQualification] = useState('');
-  const [personalityType, setPersonalityType] = useState('');
-  const [isSendingFeedback, setIsSendingFeedback] = useState(false);
-  
-  const handleSubmitFeedback = async () => {
-    // Check if at least one field is filled
-    if (name.trim() === '' && qualification.trim() === '' && 
-        (isUnsatisfied && personalityType.trim() === '')) {
-      toast.error("Please provide some information before submitting");
-      return;
-    }
-    
-    setIsSendingFeedback(true);
-    
-    try {
-      // Prepare feedback data
-      const feedbackData = {
-        name: name || "Anonymous",
-        email: "mbti-feedback@example.com", // Placeholder email
-        rating: isUnsatisfied ? 3 : 5, // 5 for satisfied, 3 for unsatisfied
-        feedback: `
-          User ${isUnsatisfied ? 'is not satisfied' : 'is satisfied'} with MBTI results.
-          Name: ${name || 'Not provided'}
-          Qualification: ${qualification || 'Not provided'}
-          ${isUnsatisfied ? `Suggested Personality Type: ${personalityType || 'Not provided'}` : ''}
-          MBTI Result: ${mbtiResult.type}
-        `,
-        source: "MBTI Results Feedback",
-      };
-      
-      // Send feedback using the email service
-      await emailService.sendEmailSilently(feedbackData);
-      
-      toast.success("Thank you for your feedback!");
-      setShowFeedbackForm(false);
-    } catch (error) {
-      toast.error("Failed to send feedback. Please try again.");
-      console.error("Error sending MBTI feedback:", error);
-    } finally {
-      setIsSendingFeedback(false);
-    }
-  };
-  
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.95 }}
@@ -137,98 +86,6 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
                 </Link>
               </motion.div>
             ))}
-          </div>
-          
-          {/* Feedback section */}
-          <div className="mt-8 border-t pt-6">
-            <h4 className="text-lg font-medium mb-4">Are you satisfied with these results?</h4>
-            
-            {!showFeedbackForm ? (
-              <div className="flex flex-wrap gap-3 justify-center">
-                <Button 
-                  variant="default"
-                  onClick={() => {
-                    setShowFeedbackForm(true);
-                    setIsUnsatisfied(false);
-                  }}
-                  className="min-w-[120px]"
-                >
-                  Yes
-                </Button>
-                
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    setShowFeedbackForm(true);
-                    setIsUnsatisfied(true);
-                  }}
-                  className="min-w-[120px]"
-                >
-                  No
-                </Button>
-              </div>
-            ) : (
-              <motion.div 
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="space-y-4"
-              >
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="name" className="text-sm font-medium">
-                    Your Name
-                  </label>
-                  <Input 
-                    id="name"
-                    placeholder="Enter your name" 
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="qualification" className="text-sm font-medium">
-                    Your Qualification
-                  </label>
-                  <Input 
-                    id="qualification"
-                    placeholder="Enter your qualification" 
-                    value={qualification}
-                    onChange={(e) => setQualification(e.target.value)}
-                  />
-                </div>
-                
-                {isUnsatisfied && (
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="personality-type" className="text-sm font-medium">
-                      What do you think your personality type is?
-                    </label>
-                    <Input 
-                      id="personality-type"
-                      placeholder="e.g., INFJ, ENTP, etc." 
-                      value={personalityType}
-                      onChange={(e) => setPersonalityType(e.target.value)}
-                    />
-                  </div>
-                )}
-                
-                <div className="flex gap-3 justify-end pt-2">
-                  <Button 
-                    variant="outline"
-                    onClick={() => setShowFeedbackForm(false)}
-                  >
-                    Cancel
-                  </Button>
-                  
-                  <Button 
-                    onClick={handleSubmitFeedback}
-                    disabled={isSendingFeedback}
-                  >
-                    {isSendingFeedback ? "Sending..." : "Submit Feedback"}
-                    <Send className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </motion.div>
-            )}
           </div>
         </div>
       )}

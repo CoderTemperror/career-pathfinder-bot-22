@@ -10,6 +10,7 @@ import Chat from "./pages/Chat";
 import MBTIPage from "./pages/MBTIPage";
 import Feedback from "./pages/Feedback";
 import NotFound from "./pages/NotFound";
+import FeedbackPopup from "./components/FeedbackPopup";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <FeedbackPopup />
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Index />} />
