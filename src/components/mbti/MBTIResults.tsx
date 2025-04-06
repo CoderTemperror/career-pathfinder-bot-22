@@ -97,17 +97,11 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
               
               {personalityInfo.imageUrl && (
                 <div className="flex justify-center mb-4">
-                  <div className="relative w-32 h-32 flex items-center justify-center">
-                    {/* This uses the full image but positions it to show only the relevant personality type */}
-                    <div 
-                      className="absolute inset-0 bg-no-repeat bg-cover"
-                      style={{
-                        backgroundImage: `url(${personalityInfo.imageUrl})`,
-                        backgroundPosition: getBackgroundPosition(mbtiResult.type),
-                        backgroundSize: '400%' // Adjust based on the grid layout
-                      }}
-                    />
-                  </div>
+                  <img 
+                    src={personalityInfo.imageUrl}
+                    alt={`${mbtiResult.type} personality type`}
+                    className="w-32 h-32 object-cover rounded-full border-2 border-primary/20"
+                  />
                 </div>
               )}
             </motion.div>
@@ -257,38 +251,6 @@ const MBTIResults = ({ mbtiResult, onReset }: MBTIResultsProps) => {
       )}
     </motion.div>
   );
-};
-
-// Helper function to determine the background position based on personality type
-const getBackgroundPosition = (mbtiType: string): string => {
-  // Position mappings based on the 4x4 grid in the image
-  const positions: Record<string, string> = {
-    // Analysts (Row 1)
-    'INTJ': '0% 0%',     // Top-left
-    'INTP': '33.33% 0%', // Top, second from left
-    'ENTJ': '66.66% 0%', // Top, third from left
-    'ENTP': '100% 0%',   // Top-right
-    
-    // Diplomats (Row 2)
-    'INFJ': '0% 33.33%',     // Second row, left
-    'INFP': '33.33% 33.33%', // Second row, second from left
-    'ENFJ': '66.66% 33.33%', // Second row, third from left
-    'ENFP': '100% 33.33%',   // Second row, right
-    
-    // Sentinels (Row 3)
-    'ISTJ': '0% 66.66%',     // Third row, left
-    'ISFJ': '33.33% 66.66%', // Third row, second from left
-    'ESTJ': '66.66% 66.66%', // Third row, third from left
-    'ESFJ': '100% 66.66%',   // Third row, right
-    
-    // Explorers (Row 4)
-    'ISTP': '0% 100%',     // Bottom-left
-    'ISFP': '33.33% 100%', // Bottom, second from left
-    'ESTP': '66.66% 100%', // Bottom, third from left
-    'ESFP': '100% 100%',   // Bottom-right
-  };
-  
-  return positions[mbtiType] || '0% 0%';
 };
 
 export default MBTIResults;

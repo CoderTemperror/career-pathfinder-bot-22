@@ -124,7 +124,7 @@ export const getPersonalityImage = (mbtiType: string): PersonalityImage => {
   return personalityImages[mbtiType] || {
     type: mbtiType,
     description: 'Your unique personality type combines several traits.',
-    imageUrl: '',
+    imageUrl: '/placeholder.svg',
     category: 'Analysts'
   };
 };
